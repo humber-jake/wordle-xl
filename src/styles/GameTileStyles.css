@@ -10,3 +10,12 @@
     font-weight: 500;
     font-size: 2rem;
 }
+.GameTile.correct{
+background-color: #54884a;
+}
+.GameTile.present{
+    background-color: #c7c16e;
+}
+.GameTile.absent{
+ background-color: #5c5c5c;
+}

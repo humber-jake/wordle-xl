@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './styles/GameTileStyles.css'
 
 function GameTile(props) {
 
-    const { answer, letter, i } = props;
-    const [tileColor, setTileColor] = useState('');
+    const { letter, evaluation } = props;
 
     return (
-        <div className={`GameTile ${tileColor}`}>
+        <div className={`GameTile ${evaluation}`}>
             <span className='GameTile-Letter' >{letter}</span>
         </div>
     );

@@ -11,6 +11,7 @@ function GameBoard(props) {
     const [boardState, setBoardState] = useState('')
     const [guessing, setGuessing] = useState('');
     const [isEvaluating, setIsEvaluating] = useState(false);
+    const [tileEvals, setTilevals] = useState([]);
 
     const board = rows.map((r,i) => {
         return <GameRow 
@@ -20,6 +21,7 @@ function GameBoard(props) {
                     boardState={boardState} 
                     guessing={guessing} 
                     currentGuess={i === boardState.length}
+                    tileEvals={tileEvals[i]}
                 />
     })
     function handleChange(e){
@@ -48,7 +50,8 @@ function GameBoard(props) {
         })
         
         // make rest absent
-        return [...result].map(i => i === undefined ? 'absent' : i);
+        result = [...result].map(i => i === undefined ? 'absent' : i);
+        setTilevals([...tileEvals, result])
     }
     
     function handleSubmit(e){
