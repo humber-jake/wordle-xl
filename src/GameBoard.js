@@ -80,7 +80,7 @@ function GameBoard(props) {
                 </div>
             </div>
             <div className='keyboard-container'>
-                <Keyboard />
+                <Keyboard handleSubmit={handleSubmit}/>
             </div>
         </div>
     );
