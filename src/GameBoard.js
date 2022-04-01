@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import GameRow from './GameRow.js'
 import './styles/GameBoardStyles.css'
+import Keyboard from './Keyboard'
 
 function GameBoard(props) {
 
@@ -46,6 +47,7 @@ function GameBoard(props) {
         guess.forEach((l, i) => {
             if(ans.includes(l)){
                 result[i] = 'present';
+                ans[i] = undefined;
             }
         })
         
@@ -77,8 +79,8 @@ function GameBoard(props) {
                     </form>
                 </div>
             </div>
-            <div className='keyboard'>
-                <p>I AM A KEYBOARD</p>
+            <div className='keyboard-container'>
+                <Keyboard />
             </div>
         </div>
     );
