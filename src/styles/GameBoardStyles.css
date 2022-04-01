@@ -1,5 +1,30 @@
-.GameBoard{
-    width: 100%;
+.Game{
     height: 100vh;
-    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.GameBoard-Container{
+    height: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.GameBoard{
+    width: 350px;
+    height: 420px;
+}
+.GameBoard-Form{
+    width: 50%;
+    margin: 0 auto;
+}
+.GameBoard-Form input{
+    width: 100%;
+}
+.GameBoard-Button{
+    margin-left: 36%
+}
+.keyboard{
+    height: 30%;
 }

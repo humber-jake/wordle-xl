@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import GameTile from './GameTile.js'
 import './styles/GameRowStyles.css'
 

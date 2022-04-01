@@ -1,21 +1,27 @@
 .GameTile{
-    width: 3rem;
-    height: 3rem;
+    height: 62px;
+    width: 100%;
     border: 2px solid lightgray;
-    margin: 5px;
+    margin: 2px;
     display: flex;
     justify-content: center;
     align-items: center;
     text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 800;
     font-size: 2rem;
 }
 .GameTile.correct{
-background-color: #54884a;
+    border: 2px solid #6aaa64;
+    background-color: #6aaa64;
+    color: white;
 }
 .GameTile.present{
-    background-color: #c7c16e;
+    border: 2px solid #c9b458;
+    background-color: #c9b458;
+    color: white;
 }
 .GameTile.absent{
- background-color: #5c5c5c;
+    border: 2px solid #787c7e;
+    background-color: #787c7e;
+    color: white;
 }

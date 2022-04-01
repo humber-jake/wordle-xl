@@ -4,7 +4,7 @@ import GameBoard from './GameBoard.js'
 function App() {
   return (
     <div className="App">
-      <GameBoard answer='digit' maxAttempts={6}/>
+        <GameBoard answer='digit' maxAttempts={6}/>
     </div>
   );
 }

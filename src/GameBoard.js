@@ -66,13 +66,20 @@ function GameBoard(props) {
     }
     
     return (
-        <div className='GameBoard'>
-            {board}
-            <form>
-                <input type="text"  minLength={`${answer.length}`} maxLength={`${answer.length}`} value={guessing} onChange={handleChange}/>
-                <br />
-                <button type='submit' onClick={handleSubmit} disabled={isEvaluating}>Guess</button>
-            </form>
+        <div className='Game'>
+            <div className='GameBoard-Container'>
+                <div className='GameBoard'>
+                    {board}
+                    <form className='GameBoard-Form'>
+                        <input type="text"  minLength={`${answer.length}`} maxLength={`${answer.length}`} value={guessing} onChange={handleChange}/>
+                        <br />
+                        <button className='GameBoard-Button' type='submit' onClick={handleSubmit} disabled={isEvaluating}>Guess</button>
+                    </form>
+                </div>
+            </div>
+            <div className='keyboard'>
+                <p>I AM A KEYBOARD</p>
+            </div>
         </div>
     );
 }
