@@ -20,9 +20,11 @@
     margin: 0 auto;
 }
 .GameBoard-Form input{
+    opacity: 0;
     width: 100%;
 }
 .GameBoard-Button{
+    display: none;
     margin-left: 36%
 }
 .keyboard{

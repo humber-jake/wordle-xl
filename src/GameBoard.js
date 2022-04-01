@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import GameRow from './GameRow.js'
 import './styles/GameBoardStyles.css'
 import Keyboard from './Keyboard'
 
 function GameBoard(props) {
 
-    
+    const useFocus = () => {
+        const htmlElRef = useRef(null)
+        const setFocus = () => {htmlElRef.current &&  htmlElRef.current.focus()}
+        return [ htmlElRef, setFocus ] 
+    }
+
+    const [inputRef, setInputFocus] = useFocus();
     const {answer, maxAttempts} = props;
     const flipTime = answer.length * 200;
     const rows = [...Array(maxAttempts)];
@@ -68,12 +74,12 @@ function GameBoard(props) {
     }
     
     return (
-        <div className='Game'>
+        <div className='Game' onClick={setInputFocus}>
             <div className='GameBoard-Container'>
                 <div className='GameBoard'>
                     {board}
                     <form className='GameBoard-Form'>
-                        <input type="text"  minLength={`${answer.length}`} maxLength={`${answer.length}`} value={guessing} onChange={handleChange}/>
+                        <input ref={inputRef} type="text"  minLength={`${answer.length}`} maxLength={`${answer.length}`} value={guessing} onChange={handleChange}/>
                         <br />
                         <button className='GameBoard-Button' type='submit' onClick={handleSubmit} disabled={isEvaluating}>Guess</button>
                     </form>
