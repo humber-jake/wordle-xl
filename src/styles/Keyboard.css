@@ -26,3 +26,24 @@
     border-radius: 5px;
     justify-content: center;
 }
+.Keyboard-Buttons{
+    display: flex;
+    width: 99%;
+    justify-content: space-between;
+    align-items: center;
+    margin: -58px 2px 2px 2px;
+}
+.Keyboard button{
+    border: none;
+    font-weight: 400;
+    text-transform: uppercase;
+    width: 4rem;
+    height: 52px;
+    padding: 2px;
+    margin: 2px;
+    background: #d3d6da;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    justify-content: center;
+}

@@ -11,6 +11,10 @@ function Keyboard(props) {
     return (
         <div className='Keyboard'>
             {keys}
+            <div className='Keyboard-Buttons'>
+                <button>Enter</button>
+                <button>Back</button>
+            </div>
         </div>
     );
 }
