@@ -4,9 +4,14 @@ import GameBoard from './GameBoard.js'
 function App() {
   return (
     <div className="App">
-      <GameBoard answer='beast' maxAttempts={6}/>
+      <GameBoard answer='digit' maxAttempts={6}/>
     </div>
   );
 }
+
+// [TODO]: stats
+
+// [TODO]: Routes for each word length game
+
 
 export default App;
