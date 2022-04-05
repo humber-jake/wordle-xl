@@ -19,6 +19,7 @@ function GameBoard(props) {
     const [guessing, setGuessing] = useState('');
     const [isEvaluating, setIsEvaluating] = useState(false);
     const [tileEvals, setTilevals] = useState([]);
+    const [gameOver, setGameOver] = useState(false);
 
     const board = rows.map((r,i) => {
         return <GameRow 
@@ -51,12 +52,10 @@ function GameBoard(props) {
 
         // check yellows
         guess.forEach((l, i) => {
-            console.log(ans)
             if(ans.includes(l)){
                 result[i] = 'present';
                 ans[ans.indexOf(l)] = undefined;
             }
-            console.log(ans)
         })
         
         // make rest absent
@@ -69,6 +68,10 @@ function GameBoard(props) {
         evaluateGuess();
         setIsEvaluating(true);
         setBoardState([...boardState, guessing]);
+        if(guessing === answer){
+            setGameOver(true);
+        }
+        console.log(gameOver);
         setGuessing('')
         setTimeout(() => {
             setIsEvaluating(false);
@@ -83,9 +86,10 @@ function GameBoard(props) {
         <div className='Game' onClick={setInputFocus}>
             <div className='GameBoard-Container'>
                 <div className='GameBoard'>
+                    {!gameOver ? 'game on' : 'you win!'}
                     {board}
                     <form className='GameBoard-Form'>
-                        <input ref={inputRef} type="text" minLength={`${answer.length}`} maxLength={`${answer.length}`} value={guessing} onChange={handleChange}/>
+                        <input ref={inputRef} type="text" minLength={`${answer.length}`} maxLength={`${answer.length}`} value={guessing} onChange={handleChange} disabled={gameOver}/>
                         <button className='GameBoard-Button' type='submit' onClick={handleSubmit} disabled={isEvaluating}>Guess</button>
                     </form>
                 </div>
