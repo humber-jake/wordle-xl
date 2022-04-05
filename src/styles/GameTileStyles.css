@@ -11,12 +11,12 @@
     font-size: 2rem;
 }
 
+/* [TODO]: use flipTime variable in JSS to selectively apply classes */
 
 .GameTile.correct{
     border: 2px solid #6aaa64;
     background-color: #6aaa64;
     color: white;
-    animation: correct 600ms ease-in-out
 }
 
     @keyframes correct {
@@ -47,29 +47,28 @@
 
     .GameTile.correct:nth-child(1){
         transition: all 600ms ease-in-out;
+        animation: correct 600ms ease-in-out;
     }
     .GameTile.correct:nth-child(2){
         transition: all 600ms ease-in-out;
         transition-delay: 300ms;
-        animation-delay: 300ms;
+        animation: correct 600ms ease-in-out 300ms;
     }
     .GameTile.correct:nth-child(3){
         transition: all 600ms ease-in-out;
         transition-delay: 600ms;
-        animation-delay: 600ms;
+        animation: correct 600ms ease-in-out 600ms;
     }
     .GameTile.correct:nth-child(4){
         transition: all 600ms ease-in-out;
         transition-delay: 900ms;
-        animation-delay: 900ms;
+        animation: correct 600ms ease-in-out 900ms;
     }
     .GameTile.correct:nth-child(5){
         transition: all 600ms ease-in-out;
         transition-delay: 1200ms;
-        animation-delay: 1200ms;
+        animation: correct 600ms ease-in-out 1200ms;
     }
-
-
 
 
 .GameTile.present{
@@ -187,3 +186,4 @@
         transition-delay: 1200ms;
         animation-delay: 1200ms;
     }
+    

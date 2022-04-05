@@ -3,7 +3,9 @@ import './styles/GameTileStyles.css'
 
 function GameTile(props) {
 
-    const { letter, evaluation } = props;
+    const { letter, evaluation} = props;
+
+
 
     return (
         <div className={`GameTile ${evaluation}`}>

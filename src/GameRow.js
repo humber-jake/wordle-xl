@@ -4,7 +4,7 @@ import './styles/GameRowStyles.css'
 
 function GameRow(props) {
 
-    const { answer, boardState, id, guessing, currentGuess, isEvaluating, tileEvals } = props;
+    const { answer, boardState, id, guessing, currentGuess, tileEvals, gameOver } = props;
     const tiles = [...Array(answer.length)]
 
     const row = tiles.map((t,i) => {
@@ -15,7 +15,7 @@ function GameRow(props) {
         if(boardState[id]){
             // else renders row with evaluations
             const evaluation = tileEvals[i];
-            return <GameTile key={i} i={i} answer={answer} letter={boardState[id][i]} evaluation={evaluation}  />   
+            return <GameTile key={i} i={i} answer={answer} letter={boardState[id][i]} evaluation={evaluation}  gameOver={gameOver}/>   
         } else {
             // else renders empty row
             return <GameTile key={i} i={i} answer={answer}/> 
@@ -23,7 +23,7 @@ function GameRow(props) {
     })
 
     return (
-        <div className='GameRow'>
+        <div className={`GameRow ${ boardState.length -1 === id ? gameOver : '' }`}>
             {row}
         </div>
     );

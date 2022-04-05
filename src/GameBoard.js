@@ -30,6 +30,7 @@ function GameBoard(props) {
                     guessing={guessing} 
                     currentGuess={i === boardState.length}
                     tileEvals={tileEvals[i]}
+                    gameOver={gameOver}
                 />
     })
     function handleChange(e){
@@ -68,10 +69,8 @@ function GameBoard(props) {
         evaluateGuess();
         setIsEvaluating(true);
         setBoardState([...boardState, guessing]);
-        if(guessing === answer){
-            setGameOver(true);
-        }
-        console.log(gameOver);
+        if(guessing === answer) setGameOver('winner')
+        else if(boardState.length + 1 === maxAttempts) setGameOver('loser');
         setGuessing('')
         setTimeout(() => {
             setIsEvaluating(false);
@@ -86,7 +85,7 @@ function GameBoard(props) {
         <div className='Game' onClick={setInputFocus}>
             <div className='GameBoard-Container'>
                 <div className='GameBoard'>
-                    {!gameOver ? 'game on' : 'you win!'}
+                    {!gameOver ? 'game on' : `${gameOver}`}
                     {board}
                     <form className='GameBoard-Form'>
                         <input ref={inputRef} type="text" minLength={`${answer.length}`} maxLength={`${answer.length}`} value={guessing} onChange={handleChange} disabled={gameOver}/>
