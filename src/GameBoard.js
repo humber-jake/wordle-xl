@@ -35,10 +35,10 @@ function GameBoard(props) {
         setGuessing(e.target.value);
     }
 
-    function evaluateGuess(){
+    async function evaluateGuess(){
         let result = Array(answer.length)
-        let ans = Array.from(answer)
-        let guess = Array.from(guessing)
+        let ans = Array.from(answer.toLowerCase())
+        let guess = Array.from(guessing.toLowerCase())
 
         // check greens, then remove matches from arrays to avoid double counting
         guess.forEach((l, i) => {
@@ -51,10 +51,12 @@ function GameBoard(props) {
 
         // check yellows
         guess.forEach((l, i) => {
+            console.log(ans)
             if(ans.includes(l)){
                 result[i] = 'present';
-                ans[i] = undefined;
+                ans[ans.indexOf(l)] = undefined;
             }
+            console.log(ans)
         })
         
         // make rest absent
@@ -73,14 +75,17 @@ function GameBoard(props) {
         }, flipTime);
     }
     
+// [TODO]: on key input, make the Tile pop
+// [TODO]: on submit, make tiles rotate and change colour
+// [TODO]: on win, animate tiles
+
     return (
         <div className='Game' onClick={setInputFocus}>
             <div className='GameBoard-Container'>
                 <div className='GameBoard'>
                     {board}
                     <form className='GameBoard-Form'>
-                        <input ref={inputRef} type="text"  minLength={`${answer.length}`} maxLength={`${answer.length}`} value={guessing} onChange={handleChange}/>
-                        <br />
+                        <input ref={inputRef} type="text" minLength={`${answer.length}`} maxLength={`${answer.length}`} value={guessing} onChange={handleChange}/>
                         <button className='GameBoard-Button' type='submit' onClick={handleSubmit} disabled={isEvaluating}>Guess</button>
                     </form>
                 </div>

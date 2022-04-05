@@ -20,12 +20,13 @@
     height: 3rem;
     padding: 2px;
     margin: 2px;
-    background: #d3d6da;
+    background-color: #d3d6da;
     display: flex;
     align-items: center;
     border-radius: 5px;
     justify-content: center;
 }
+
 .Keyboard-Buttons{
     display: flex;
     width: 99%;
@@ -39,7 +40,6 @@
     text-transform: uppercase;
     width: 4rem;
     height: 52px;
-    padding: 2px;
     margin: 2px;
     background: #d3d6da;
     display: flex;
