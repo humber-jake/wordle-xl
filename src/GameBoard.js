@@ -20,6 +20,7 @@ function GameBoard(props) {
     const [isEvaluating, setIsEvaluating] = useState(false);
     const [tileEvals, setTilevals] = useState([]);
     const [gameOver, setGameOver] = useState(false);
+    const [guessedLetters, setGuessedLetters] = useState([]);
 
     const board = rows.map((r,i) => {
         return <GameRow 
@@ -34,7 +35,7 @@ function GameBoard(props) {
                 />
     })
     function handleChange(e){
-        setGuessing(e.target.value);
+        setGuessing(e.target.value.replace(/[^a-zA-Z]/ig,''));
     }
 
     async function evaluateGuess(){
@@ -63,6 +64,10 @@ function GameBoard(props) {
         result = [...result].map(i => i === undefined ? 'absent' : i);
         setTilevals([...tileEvals, result])
     }
+
+    function updateKeyboard(){
+        // [TODO]: update colors based on guessedLetters
+    }
     
     function handleSubmit(e){
         e.preventDefault();
@@ -78,14 +83,11 @@ function GameBoard(props) {
     }
     
 // [TODO]: on key input, make the Tile pop
-// [TODO]: on submit, make tiles rotate and change colour
-// [TODO]: on win, animate tiles
-
+ 
     return (
         <div className='Game' onClick={setInputFocus}>
             <div className='GameBoard-Container'>
                 <div className='GameBoard'>
-                    {!gameOver ? 'game on' : `${gameOver}`}
                     {board}
                     <form className='GameBoard-Form'>
                         <input ref={inputRef} type="text" minLength={`${answer.length}`} maxLength={`${answer.length}`} value={guessing} onChange={handleChange} disabled={gameOver}/>
