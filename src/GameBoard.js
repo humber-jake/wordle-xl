@@ -20,7 +20,7 @@ function GameBoard(props) {
     const [isEvaluating, setIsEvaluating] = useState(false);
     const [tileEvals, setTilevals] = useState([]);
     const [gameOver, setGameOver] = useState(false);
-    const [guessedLetters, setGuessedLetters] = useState([]);
+    const [guessedLetters, setGuessedLetters] = useState({});
 
     const board = rows.map((r,i) => {
         return <GameRow 
@@ -63,13 +63,24 @@ function GameBoard(props) {
         // make rest absent
         result = [...result].map(i => i === undefined ? 'absent' : i);
         setTilevals([...tileEvals, result])
+
+        // update keyboard colours using guessed words and evaluations
+        updateKeyboard([...boardState, guessing], [...tileEvals, result]);
     }
 
-    function updateKeyboard(){
-        // [TODO]: update colors based on guessedLetters
+    function updateKeyboard(words, evals){
+        let result = {}
+        words.join('').split('').forEach((l,i) => {
+            if(result[l] === 'correct') return;
+            if(evals.flat()[i] === 'correct') result[l] = evals.flat()[i];
+            if(result[l] === 'present') return;
+            result[l] = evals.flat()[i];
+        });
+        setGuessedLetters(result);
     }
     
     function handleSubmit(e){
+        if(guessing.length < answer.length) return;
         e.preventDefault();
         evaluateGuess();
         setIsEvaluating(true);
@@ -96,7 +107,7 @@ function GameBoard(props) {
                 </div>
             </div>
             <div className='keyboard-container'>
-                <Keyboard handleSubmit={handleSubmit}/>
+                <Keyboard handleSubmit={handleSubmit} guessedLetters={guessedLetters}/>
             </div>
         </div>
     );

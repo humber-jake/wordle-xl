@@ -26,6 +26,21 @@
     border-radius: 5px;
     justify-content: center;
 }
+.Keyboard-Key.correct{
+    transition: background-color 1800ms;
+    transition-timing-function: step-end;
+    background-color: #6aaa64;
+}
+.Keyboard-Key.present{
+    transition: background-color 1800ms;
+    transition-timing-function: step-end;
+    background-color: #c9b458;
+}
+.Keyboard-Key.absent{
+    transition: background-color 1800ms;
+    transition-timing-function: step-end;
+    background-color: #787c7e;
+}
 
 .Keyboard-Buttons{
     display: flex;
