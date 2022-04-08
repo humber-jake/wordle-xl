@@ -11,6 +11,17 @@
     font-size: 2rem;
 }
 
+.GameTile.highlighted{
+    border: 2px solid #787c7e;
+    animation: pop 100ms ease-in-out;
+}
+
+@keyframes pop {
+    0%{ transform: scale(1);}
+    50%{ transform: scale(1.1);}
+    100%{ transform: scale(1);}
+}
+
 /* [TODO]: use flipTime variable in JSS to selectively apply classes */
 
 .GameTile.correct{

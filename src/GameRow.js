@@ -6,11 +6,12 @@ function GameRow(props) {
 
     const { answer, boardState, id, guessing, currentGuess, tileEvals, gameOver } = props;
     const tiles = [...Array(answer.length)]
-
+    
     const row = tiles.map((t,i) => {
+        const highlighted = guessing.length > i;
         if(currentGuess){
             // renders controlled input if currentGuess is true
-            return <GameTile key={i} i={i} answer={answer} letter={guessing[i]}  />
+            return <GameTile key={i} i={i} answer={answer} letter={guessing[i]} highlighted={highlighted}/>
         }
         if(boardState[id]){
             // else renders row with evaluations

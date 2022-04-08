@@ -21,6 +21,7 @@ function GameBoard(props) {
     const [tileEvals, setTilevals] = useState([]);
     const [gameOver, setGameOver] = useState(false);
     const [guessedLetters, setGuessedLetters] = useState({});
+    
 
     const board = rows.map((r,i) => {
         return <GameRow 
@@ -36,6 +37,11 @@ function GameBoard(props) {
     })
     function handleChange(e){
         setGuessing(e.target.value.replace(/[^a-zA-Z]/ig,''));
+    }
+
+    function handleKeyDown(e){
+        // disables arrow keys
+        if([37,38,39,40].includes(e.keyCode)) e.preventDefault();
     }
 
     async function evaluateGuess(){
@@ -70,6 +76,7 @@ function GameBoard(props) {
 
     function updateKeyboard(words, evals){
         let result = {}
+        
         words.join('').split('').forEach((l,i) => {
             if(result[l] === 'correct') return;
             if(evals.flat()[i] === 'correct') result[l] = evals.flat()[i];
@@ -101,7 +108,17 @@ function GameBoard(props) {
                 <div className='GameBoard'>
                     {board}
                     <form className='GameBoard-Form'>
-                        <input ref={inputRef} type="text" minLength={`${answer.length}`} maxLength={`${answer.length}`} value={guessing} onChange={handleChange} disabled={gameOver}/>
+                        <input 
+                            onKeyDown={handleKeyDown} 
+                            ref={inputRef} 
+                            type="text" 
+                            minLength={`${answer.length}`} 
+                            maxLength={`${answer.length}`} 
+                            value={guessing} 
+                            onChange={handleChange} 
+                            disabled={gameOver} 
+                            required
+                        />
                         <button className='GameBoard-Button' type='submit' onClick={handleSubmit} disabled={isEvaluating}>Guess</button>
                     </form>
                 </div>
