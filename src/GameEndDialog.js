@@ -4,9 +4,12 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import CloseIcon from '@mui/icons-material/Close';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import Typography from '@mui/material/Typography';
 
-export default function GameEndDialog() {
+export default function GameEndDialog(props) {
+
+  const {timer} = props;
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -18,8 +21,8 @@ export default function GameEndDialog() {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open dialog
+      <Button variant="string" size="small" onClick={handleClickOpen} style={{marginLeft: '-67px'}}>
+        <BarChartIcon fontSize="large"/>
       </Button>
       <Dialog
         onClose={handleClose}
@@ -30,16 +33,14 @@ export default function GameEndDialog() {
           <Button autoFocus onClick={handleClose}>
             <CloseIcon/>
           </Button>
-            {/* Statistics, Guess Distribution, Next Puzzle, Share */}
           <Typography gutterBottom>
-            Statistics
-
-            Guess Distribution
-
-
-            Next Puzzle
-
-            Share
+            <h1>Statistics</h1>
+            <div>Distribution</div>
+            <div>
+              <h3>Next Puzzle:</h3>
+              <p style={{textAlign: 'center'}}>{timer.hours}: {timer.minutes}: {timer.seconds}</p>
+            </div>
+            <div>Share</div>
           </Typography>
         </DialogContent>
       </Dialog>

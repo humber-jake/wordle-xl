@@ -5,6 +5,7 @@ import GameEndDialog from './GameEndDialog.js'
 import PossibleAnswers from './PossibleAnswers.js'
 import PossibleGuesses from './PossibleGuesses.js'
 import shuffleSeed from 'shuffle-seed';
+import { AppBar, Toolbar, Typography} from '@mui/material';
 
 
 function handleDate(){
@@ -52,9 +53,17 @@ function App() {
 
   return (
     <div className="App">
-      <h1 style={{textAlign: 'center'}}>{timer.hours}: {timer.minutes}: {timer.seconds}</h1>
-        <GameBoard answer='bogus' maxAttempts={6}/>
-        <GameEndDialog />
+
+      <AppBar position="static" color="transparent">
+        <Toolbar>
+          <Typography variant="h3" component="div" sx={{ flexGrow: 1 }} align="center">
+            Wordle XL
+          </Typography>
+          <GameEndDialog timer={timer}/>
+        </Toolbar>
+      </AppBar>
+
+      <GameBoard answer='bogus' maxAttempts={6}/>
     </div>
   );
 }

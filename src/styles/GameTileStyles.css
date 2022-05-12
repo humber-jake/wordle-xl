@@ -1,6 +1,6 @@
 .GameTile{
     height: 62px;
-    width: 100%;
+    width: 62px;
     border: 2px solid lightgray;
     margin: 2px;
     display: flex;
