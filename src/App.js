@@ -24,13 +24,9 @@ function handleDate(){
     return countdown;
 }
   
-function daysSinceEpoch(){
-    return Math.floor(new Date() / (1000 * 60 * 60 * 24))
-}
-  
 function getNewWord(){
     let shuffledAnswers = shuffleSeed.shuffle(PossibleAnswers, 'seed')
-    let day = daysSinceEpoch() % shuffledAnswers.length;
+    let day = Math.floor(new Date() / (1000 * 60 * 60 * 24)) % shuffledAnswers.length;
     console.log(day)
     console.log(PossibleAnswers[day]);
     console.log(shuffledAnswers[day]);
@@ -54,16 +50,23 @@ function App() {
   return (
     <div className="App">
 
-      <AppBar position="static" color="transparent">
-        <Toolbar>
-          <Typography variant="h3" component="div" sx={{ flexGrow: 1 }} align="center">
+      <AppBar position="static" color="transparent" sx={{ boxShadow: "none", borderBottom: "1px solid lightgray" }}>
+        <Toolbar sx={{ minHeight: "50px !important"}} >
+          <Typography 
+              variant="h4" 
+              component="div" 
+              sx={{
+                    flexGrow: 1, 
+                    fontFamily: "'Patua One', cursive;"
+                  }} 
+              align="center">
             Wordle XL
           </Typography>
           <GameEndDialog timer={timer}/>
         </Toolbar>
       </AppBar>
 
-      <GameBoard answer='bogus' maxAttempts={6}/>
+      <GameBoard answer='clown' maxAttempts={6}/>
     </div>
   );
 }
