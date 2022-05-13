@@ -32,8 +32,7 @@ function getNewWord(){
     console.log(shuffledAnswers[day]);
     return shuffledAnswers[day];
 }
-  
-getNewWord();
+const word = getNewWord();
   
 function App() {
       
@@ -66,7 +65,7 @@ function App() {
         </Toolbar>
       </AppBar>
 
-      <GameBoard answer='clown' maxAttempts={6}/>
+      <GameBoard answer={word} maxAttempts={6}/>
     </div>
   );
 }

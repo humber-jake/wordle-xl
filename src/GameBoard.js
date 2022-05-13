@@ -40,8 +40,9 @@ function GameBoard(props) {
     }
 
     function handleKeyDown(e){
-        // disables arrow keys
-        if([37,38,39,40].includes(e.keyCode)) e.preventDefault();
+        // disable all keys but enter and letters
+        let keys = [8,13,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90]
+        if(!keys.includes(e.keyCode)) e.preventDefault();
     }
 
     async function evaluateGuess(){
