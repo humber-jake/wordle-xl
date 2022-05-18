@@ -7,4 +7,10 @@ div a{
     margin: 0 1rem;
 }
 
+div a.active{
+    background-color: #d3d6da;
+    border-radius: 5px;
+    transition: background-color 500ms;
+}
+
 

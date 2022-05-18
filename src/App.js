@@ -12,7 +12,7 @@ import EightLetterAnswers from './wordlists/8-letter-answers'
 import EightLetterGuesses from './wordlists/8-letter-guesses'
 import shuffleSeed from 'shuffle-seed';
 import { AppBar, Toolbar, Typography, Button} from '@mui/material';
-import { Routes, Route, Navigate, Link } from 'react-router-dom'
+import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
 
 
 function handleDate(){
@@ -68,8 +68,8 @@ function App() {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <Button variant='string'><Link to="/Five">Five</Link></Button>
-            <Button variant='string'><Link to="/Six">Six</Link></Button>
+            <NavLink to="/Five"><Button variant='string'>Five</Button></NavLink>
+            <NavLink to="/Six"><Button variant='string'>Six</Button></NavLink>
             <Typography 
                 variant="h4" 
                 component="div" 
@@ -79,8 +79,8 @@ function App() {
                     }}>
               Wordle XL
             </Typography>
-            <Button variant='string'><Link to="/Seven">Seven</Link></Button>
-            <Button variant='string'><Link to="/Eight">Eight</Link></Button>
+            <NavLink to="/Seven"><Button variant='string'>Seven</Button></NavLink>
+            <NavLink to="/Eight"><Button variant='string'>Eight</Button></NavLink>
           </div>
           <GameEndDialog timer={timer}/>
         </Toolbar>
