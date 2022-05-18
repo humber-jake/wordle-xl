@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import GameBoard from './GameBoard.js'
 import GameEndDialog from './GameEndDialog.js'
 import PossibleAnswers from './wordlists/5-letter-answers'
-import PossibleGuesses from './PossibleGuesses.js'
 import shuffleSeed from 'shuffle-seed';
 import { AppBar, Toolbar, Typography} from '@mui/material';
 

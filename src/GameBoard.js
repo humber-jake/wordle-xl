@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import GameRow from './GameRow.js'
 import './styles/GameBoardStyles.css'
 import Keyboard from './Keyboard'
+import PossibleGuesses from './wordlists/5-letter-guesses'
 
 function GameBoard(props) {
 
@@ -90,6 +91,7 @@ function GameBoard(props) {
     function handleSubmit(e){
         if(guessing.length < answer.length) return;
         e.preventDefault();
+        if(!PossibleGuesses.includes(guessing)) return;
         evaluateGuess();
         setIsEvaluating(true);
         setBoardState([...boardState, guessing]);
