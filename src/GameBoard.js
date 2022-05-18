@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import GameRow from './GameRow.js'
 import './styles/GameBoardStyles.css'
 import Keyboard from './Keyboard'
-import PossibleGuesses from './wordlists/5-letter-guesses'
 
 function GameBoard(props) {
 
@@ -13,7 +12,7 @@ function GameBoard(props) {
     }
 
     const [inputRef, setInputFocus] = useFocus();
-    const {answer, maxAttempts} = props;
+    const {answer, maxAttempts, PossibleGuesses} = props;
     const flipTime = answer.length * 200;
     const rows = [...Array(maxAttempts)];
     const [boardState, setBoardState] = useState('')
@@ -102,8 +101,6 @@ function GameBoard(props) {
             setIsEvaluating(false);
         }, flipTime);
     }
-    
-// [TODO]: on key input, make the Tile pop
  
     return (
         <div className='Game' onClick={setInputFocus}>

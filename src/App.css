@@ -1,5 +1,10 @@
 .App{
     font-family: 'Rubik', sans-serif;
 }
+div a{
+    text-decoration: none;
+    color: black;
+    margin: 0 1rem;
+}
 
 

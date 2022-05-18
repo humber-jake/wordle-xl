@@ -2,9 +2,17 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import GameBoard from './GameBoard.js'
 import GameEndDialog from './GameEndDialog.js'
-import PossibleAnswers from './wordlists/5-letter-answers'
+import FiveLetterAnswers from './wordlists/5-letter-answers'
+import FiveLetterGuesses from './wordlists/5-letter-guesses'
+import SixLetterAnswers from './wordlists/6-letter-answers'
+import SixLetterGuesses from './wordlists/6-letter-guesses'
+import SevenLetterAnswers from './wordlists/7-letter-answers'
+import SevenLetterGuesses from './wordlists/7-letter-guesses'
+import EightLetterAnswers from './wordlists/8-letter-answers'
+import EightLetterGuesses from './wordlists/8-letter-guesses'
 import shuffleSeed from 'shuffle-seed';
-import { AppBar, Toolbar, Typography} from '@mui/material';
+import { AppBar, Toolbar, Typography, Button} from '@mui/material';
+import { Routes, Route, Navigate, Link } from 'react-router-dom'
 
 
 function handleDate(){
@@ -23,7 +31,7 @@ function handleDate(){
     return countdown;
 }
   
-function getNewWord(){
+function getNewWord(PossibleAnswers){
     let shuffledAnswers = shuffleSeed.shuffle(PossibleAnswers, 'seed')
     let day = Math.floor(new Date() / (1000 * 60 * 60 * 24)) % shuffledAnswers.length;
     console.log(day)
@@ -31,7 +39,11 @@ function getNewWord(){
     console.log(shuffledAnswers[day]);
     return shuffledAnswers[day];
 }
-const word = getNewWord();
+
+let FiveLetterWord = getNewWord(FiveLetterAnswers)
+let SixLetterWord = getNewWord(SixLetterAnswers)
+let SevenLetterWord = getNewWord(SevenLetterAnswers)
+let EightLetterWord = getNewWord(EightLetterAnswers)
   
 function App() {
       
@@ -50,21 +62,39 @@ function App() {
 
       <AppBar position="static" color="transparent" sx={{ boxShadow: "none", borderBottom: "1px solid lightgray" }}>
         <Toolbar sx={{ minHeight: "50px !important"}} >
-          <Typography 
-              variant="h4" 
-              component="div" 
-              sx={{
-                    flexGrow: 1, 
-                    fontFamily: "'Patua One', cursive;"
-                  }} 
-              align="center">
-            Wordle XL
-          </Typography>
+          <div style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <Button variant='string'><Link to="/Five">Five</Link></Button>
+            <Button variant='string'><Link to="/Six">Six</Link></Button>
+            <Typography 
+                variant="h4" 
+                component="div" 
+                sx={{
+                      fontFamily: "'Patua One', cursive;",
+                      margin: "0 2rem"
+                    }}>
+              Wordle XL
+            </Typography>
+            <Button variant='string'><Link to="/Seven">Seven</Link></Button>
+            <Button variant='string'><Link to="/Eight">Eight</Link></Button>
+          </div>
           <GameEndDialog timer={timer}/>
         </Toolbar>
       </AppBar>
 
-      <GameBoard answer={word} maxAttempts={6}/>
+      <Routes>
+        <Route path='/' element={<Navigate to="/five" />}/>
+        <Route path='five' element={<GameBoard answer={FiveLetterWord} maxAttempts={6} PossibleGuesses={FiveLetterGuesses}/>}/>
+        <Route path='six' element={<GameBoard answer={SixLetterWord} maxAttempts={6} PossibleGuesses={SixLetterGuesses}/>}/>
+        <Route path='seven' element={<GameBoard answer={SevenLetterWord} maxAttempts={6} PossibleGuesses={SevenLetterGuesses}/>}/>
+        <Route path='eight' element={<GameBoard answer={EightLetterWord} maxAttempts={6} PossibleGuesses={EightLetterGuesses}/>}/>
+      </Routes>
+
+    
     </div>
   );
 }
