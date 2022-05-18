@@ -33,15 +33,13 @@ export default function GameEndDialog(props) {
           <Button autoFocus onClick={handleClose}>
             <CloseIcon/>
           </Button>
-          <Typography gutterBottom>
-            <h1>Statistics</h1>
+            <div>Statistics</div>
             <div>Distribution</div>
-            <div>
-              <h3>Next Puzzle:</h3>
-              <p style={{textAlign: 'center'}}>{timer.hours}: {timer.minutes}: {timer.seconds}</p>
-            </div>
             <div>Share</div>
-          </Typography>
+          <div>
+              <h3>Next Puzzle:</h3>
+              <div style={{textAlign: 'center'}}>{timer.hours}: {timer.minutes}: {timer.seconds}</div>
+            </div>
         </DialogContent>
       </Dialog>
     </div>
