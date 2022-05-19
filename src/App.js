@@ -15,7 +15,11 @@ import { AppBar, Toolbar, Typography, Button} from '@mui/material';
 import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
 
 
+// [TODO]: Move more logic from the GameBoard component to the App component, make it carry across 
+
+
 function handleDate(){
+
   
   let today = new Date()
   let tomorrow = new Date()
@@ -23,20 +27,18 @@ function handleDate(){
   tomorrow.setHours(0,0,0,0);
   
   let countdown = {
-      hours: Math.floor((tomorrow - today) / (1000 * 60 * 60)).toString().padStart(2,'0'),
-      minutes: Math.floor((tomorrow - today) % (1000 * 60 * 60) / (1000 * 60)).toString().padStart(2,'0'),
+    hours: Math.floor((tomorrow - today) / (1000 * 60 * 60)).toString().padStart(2,'0'),
+    minutes: Math.floor((tomorrow - today) % (1000 * 60 * 60) / (1000 * 60)).toString().padStart(2,'0'),
       seconds: Math.floor((tomorrow - today) % (1000 * 60 * 60) / (1000) % 60).toString().padStart(2,'0'),
     }
-
+    
     return countdown;
 }
   
 function getNewWord(PossibleAnswers){
-    let shuffledAnswers = shuffleSeed.shuffle(PossibleAnswers, 'seed')
-    let day = Math.floor(new Date() / (1000 * 60 * 60 * 24)) % shuffledAnswers.length;
-    console.log(day)
-    console.log(PossibleAnswers[day]);
-    console.log(shuffledAnswers[day]);
+  let shuffledAnswers = shuffleSeed.shuffle(PossibleAnswers, 'seed')
+  let day = Math.floor(new Date() / (1000 * 60 * 60 * 24)) % shuffledAnswers.length;
+    console.log(`#${day}: ${shuffledAnswers[day]}` )
     return shuffledAnswers[day];
 }
 
@@ -44,18 +46,41 @@ let FiveLetterWord = getNewWord(FiveLetterAnswers)
 let SixLetterWord = getNewWord(SixLetterAnswers)
 let SevenLetterWord = getNewWord(SevenLetterAnswers)
 let EightLetterWord = getNewWord(EightLetterAnswers)
-  
+
+function validateFiveLetterGuess(guess){
+  return !FiveLetterGuesses.includes(guess);
+}
+function validateSixLetterGuess(guess){
+  return !SixLetterGuesses.includes(guess);
+}
+function validateSevenLetterGuess(guess){
+  return !SevenLetterGuesses.includes(guess);
+}
+function validateEightLetterGuess(guess){
+  return !EightLetterGuesses.includes(guess);
+}
+
+
 function App() {
-      
+  
+  const [boardState5, setBoardState5] = useState('')
+  const [boardState6, setBoardState6] = useState('')
+  const [boardState7, setBoardState7] = useState('')
+  const [boardState8, setBoardState8] = useState('')
+  const [tileEvals5, setTileEvals5] = useState([]);
+  const [tileEvals6, setTileEvals6] = useState([]);
+  const [tileEvals7, setTileEvals7] = useState([]);
+  const [tileEvals8, setTileEvals8] = useState([]);
   const [timer, setTimer] = useState(handleDate());
   
+
   useEffect(() => {
     const timeout = setInterval(() => {
       setTimer(handleDate());
     }, 1000);
     return () => clearInterval(timeout);
   });
-
+  
 
   return (
     <div className="App">
@@ -87,11 +112,53 @@ function App() {
       </AppBar>
 
       <Routes>
-        <Route path='/' element={<Navigate to="/five" />}/>
-        <Route path='five' element={<GameBoard answer={FiveLetterWord} maxAttempts={6} PossibleGuesses={FiveLetterGuesses}/>}/>
-        <Route path='six' element={<GameBoard answer={SixLetterWord} maxAttempts={6} PossibleGuesses={SixLetterGuesses}/>}/>
-        <Route path='seven' element={<GameBoard answer={SevenLetterWord} maxAttempts={6} PossibleGuesses={SevenLetterGuesses}/>}/>
-        <Route path='eight' element={<GameBoard answer={EightLetterWord} maxAttempts={6} PossibleGuesses={EightLetterGuesses}/>}/>
+        <Route path='/' 
+               element={<Navigate to="/five" />}
+               />
+        <Route path='five' 
+               element={<GameBoard 
+                          answer={FiveLetterWord} 
+                          maxAttempts={6} 
+                          boardState={boardState5} 
+                          setBoardState={setBoardState5} 
+                          validateGuess={validateFiveLetterGuess}
+                          tileEvals={tileEvals5}
+                          setTileEvals={setTileEvals5}
+                            />}
+                          />
+        <Route path='six' 
+               element={<GameBoard 
+                          answer={SixLetterWord} 
+                          maxAttempts={6} 
+                          boardState={boardState6} 
+                          setBoardState={setBoardState6} 
+                          validateGuess={validateSixLetterGuess}
+                          tileEvals={tileEvals6}
+                          setTileEvals={setTileEvals6}
+                          />}
+                        />
+        <Route path='seven' 
+               element={<GameBoard 
+                          answer={SevenLetterWord} 
+                          maxAttempts={6} 
+                          boardState={boardState7} 
+                          setBoardState={setBoardState7} 
+                          validateGuess={validateSevenLetterGuess}
+                          tileEvals={tileEvals7}
+                          setTileEvals={setTileEvals7}
+                                               />}
+                                            />
+        <Route path='eight' 
+               element={<GameBoard 
+                          answer={EightLetterWord} 
+                          maxAttempts={6} 
+                          boardState={boardState8} 
+                          setBoardState={setBoardState8} 
+                          validateGuess={validateEightLetterGuess}
+                          tileEvals={tileEvals8}
+                          setTileEvals={setTileEvals8}
+                                               />}
+                                            />
       </Routes>
 
     
@@ -101,11 +168,7 @@ function App() {
 
 // [TODO]: stats
 
-// [TODO]: Routes for each word length game
-
 // [TODO]: CSS to JSS to dynamically calculate flipTime / apply animations to all letters
-
-
 
 
 export default App;

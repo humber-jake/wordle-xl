@@ -12,16 +12,13 @@ function GameBoard(props) {
     }
 
     const [inputRef, setInputFocus] = useFocus();
-    const {answer, maxAttempts, PossibleGuesses} = props;
+    const {answer, maxAttempts, validateGuess, boardState, setBoardState, tileEvals, setTileEvals} = props;
     const flipTime = answer.length * 200;
     const rows = [...Array(maxAttempts)];
-    const [boardState, setBoardState] = useState('')
     const [guessing, setGuessing] = useState('');
     const [isEvaluating, setIsEvaluating] = useState(false);
-    const [tileEvals, setTilevals] = useState([]);
     const [gameOver, setGameOver] = useState(false);
     const [guessedLetters, setGuessedLetters] = useState({});
-    
 
     const board = rows.map((r,i) => {
         return <GameRow 
@@ -45,7 +42,7 @@ function GameBoard(props) {
         if(!keys.includes(e.keyCode)) e.preventDefault();
     }
 
-    async function evaluateGuess(){
+    function evaluateGuess(){
         let result = Array(answer.length)
         let ans = Array.from(answer.toLowerCase())
         let guess = Array.from(guessing.toLowerCase())
@@ -69,7 +66,7 @@ function GameBoard(props) {
         
         // make rest absent
         result = [...result].map(i => i === undefined ? 'absent' : i);
-        setTilevals([...tileEvals, result])
+        setTileEvals([...tileEvals, result])
 
         // update keyboard colours using guessed words and evaluations
         updateKeyboard([...boardState, guessing], [...tileEvals, result]);
@@ -90,10 +87,12 @@ function GameBoard(props) {
     function handleSubmit(e){
         if(guessing.length < answer.length) return;
         e.preventDefault();
-        if(!PossibleGuesses.includes(guessing)) return;
+        console.log(validateGuess(guessing));
+        if(validateGuess(guessing)) return;
         evaluateGuess();
         setIsEvaluating(true);
         setBoardState([...boardState, guessing]);
+        localStorage.setItem(`boardState${guessing.length}`, JSON.stringify([...boardState, guessing]))
         if(guessing === answer) setGameOver('winner')
         else if(boardState.length + 1 === maxAttempts) setGameOver('loser');
         setGuessing('')
@@ -101,6 +100,10 @@ function GameBoard(props) {
             setIsEvaluating(false);
         }, flipTime);
     }
+
+    useEffect(()=> {
+        updateKeyboard([...boardState], [...tileEvals])
+    })
  
     return (
         <div className='Game' onClick={setInputFocus}>
