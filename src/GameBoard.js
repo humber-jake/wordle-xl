@@ -1,24 +1,30 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import GameRow from './GameRow.js'
 import './styles/GameBoardStyles.css'
 import Keyboard from './Keyboard'
 
 function GameBoard(props) {
 
-    const useFocus = () => {
-        const htmlElRef = useRef(null)
-        const setFocus = () => {htmlElRef.current &&  htmlElRef.current.focus()}
-        return [ htmlElRef, setFocus ] 
-    }
+    const {answer, maxAttempts, validateGuess, 
+            boardState, setBoardState, 
+            tileEvals, setTileEvals, 
+            inputRef, setInputFocus} = props;
 
-    const [inputRef, setInputFocus] = useFocus();
-    const {answer, maxAttempts, validateGuess, boardState, setBoardState, tileEvals, setTileEvals} = props;
     const flipTime = answer.length * 200;
     const rows = [...Array(maxAttempts)];
     const [guessing, setGuessing] = useState('');
+    const [wobble, setWobble] = useState(...[Array(rows.length)]);
     const [isEvaluating, setIsEvaluating] = useState(false);
     const [gameOver, setGameOver] = useState(false);
     const [guessedLetters, setGuessedLetters] = useState({});
+
+
+    // Create wobble object based on number of rows
+    useEffect(()=>{
+        let res = []
+        rows.map((row, i) => res.push(false))
+        setWobble(res)
+    },[])
 
     const board = rows.map((r,i) => {
         return <GameRow 
@@ -30,6 +36,7 @@ function GameBoard(props) {
                     currentGuess={i === boardState.length}
                     tileEvals={tileEvals[i]}
                     gameOver={gameOver}
+                    wobble={wobble[i]}
                 />
     })
     function handleChange(e){
@@ -88,7 +95,16 @@ function GameBoard(props) {
         if(guessing.length < answer.length) return;
         e.preventDefault();
         console.log(validateGuess(guessing));
-        if(validateGuess(guessing)) return;
+        if(validateGuess(guessing)){
+            let res = wobble;
+            res[boardState.length] = true;
+            setWobble(res)
+            setTimeout(() => {
+                res[boardState.length] = false;
+                setWobble(res)
+            }, 450)
+            return;
+        } 
         evaluateGuess();
         setIsEvaluating(true);
         setBoardState([...boardState, guessing]);

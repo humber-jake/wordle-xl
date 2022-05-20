@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import GameBoard from './GameBoard.js'
 import GameEndDialog from './GameEndDialog.js'
 import FiveLetterAnswers from './wordlists/5-letter-answers'
@@ -62,7 +62,14 @@ function validateEightLetterGuess(guess){
 
 
 function App() {
+
+  const useFocus = () => {
+    const htmlElRef = useRef(null)
+    const setFocus = () => {htmlElRef.current &&  htmlElRef.current.focus()}
+    return [ htmlElRef, setFocus ] 
+}
   
+  const [inputRef, setInputFocus] = useFocus();
   const [boardState5, setBoardState5] = useState('')
   const [boardState6, setBoardState6] = useState('')
   const [boardState7, setBoardState7] = useState('')
@@ -93,8 +100,8 @@ function App() {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <NavLink to="/Five"><Button variant='string'>Five</Button></NavLink>
-            <NavLink to="/Six"><Button variant='string'>Six</Button></NavLink>
+            <NavLink to="/Five"><Button onClick={setInputFocus} variant='string'>Five</Button></NavLink>
+            <NavLink to="/Six"><Button onClick={setInputFocus} variant='string'>Six</Button></NavLink>
             <Typography 
                 variant="h4" 
                 component="div" 
@@ -104,8 +111,8 @@ function App() {
                     }}>
               Wordle XL
             </Typography>
-            <NavLink to="/Seven"><Button variant='string'>Seven</Button></NavLink>
-            <NavLink to="/Eight"><Button variant='string'>Eight</Button></NavLink>
+            <NavLink to="/Seven"><Button onClick={setInputFocus} variant='string'>Seven</Button></NavLink>
+            <NavLink to="/Eight"><Button onClick={setInputFocus} variant='string'>Eight</Button></NavLink>
           </div>
           <GameEndDialog timer={timer}/>
         </Toolbar>
@@ -124,6 +131,8 @@ function App() {
                           validateGuess={validateFiveLetterGuess}
                           tileEvals={tileEvals5}
                           setTileEvals={setTileEvals5}
+                          inputRef={inputRef}
+                          setInputFocus={setInputFocus}
                             />}
                           />
         <Route path='six' 
@@ -135,6 +144,8 @@ function App() {
                           validateGuess={validateSixLetterGuess}
                           tileEvals={tileEvals6}
                           setTileEvals={setTileEvals6}
+                          inputRef={inputRef}
+                          setInputFocus={setInputFocus}
                           />}
                         />
         <Route path='seven' 
@@ -146,6 +157,9 @@ function App() {
                           validateGuess={validateSevenLetterGuess}
                           tileEvals={tileEvals7}
                           setTileEvals={setTileEvals7}
+                          inputRef={inputRef}
+                          setInputFocus={setInputFocus}
+
                                                />}
                                             />
         <Route path='eight' 
@@ -157,6 +171,9 @@ function App() {
                           validateGuess={validateEightLetterGuess}
                           tileEvals={tileEvals8}
                           setTileEvals={setTileEvals8}
+                          inputRef={inputRef}
+                          setInputFocus={setInputFocus}
+
                                                />}
                                             />
       </Routes>

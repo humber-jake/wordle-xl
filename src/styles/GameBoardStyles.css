@@ -29,3 +29,7 @@
 .keyboard{
     height: 30%;
 }
+
+.nope{
+    background-color: red !important;
+}

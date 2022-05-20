@@ -6,6 +6,20 @@
     align-items: center;
 }
 
+@keyframes wobble {
+    0%{
+        transform: translatex(0px);
+    }
+    25%{
+        transform: translatex(-5px);
+    }
+    75%{
+        transform: translatex(5px);
+    }
+    100%{
+        transform: translatex(0px);
+    }
+}
 @keyframes winner {
     0%{
         transform: translateY(0px);
@@ -41,6 +55,11 @@
         background-color: #6aaa64;
         color: white;
     }
+}
+
+.GameRow.wobble{
+    animation: wobble 150ms ease-in-out;
+    animation-iteration-count: 3;
 }
 
 
