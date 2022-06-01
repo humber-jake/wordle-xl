@@ -70,6 +70,8 @@ function App() {
 }
   
   const [inputRef, setInputFocus] = useFocus();
+  const [guessing, setGuessing] = useState('');
+
   const [boardState5, setBoardState5] = useState('')
   const [boardState6, setBoardState6] = useState('')
   const [boardState7, setBoardState7] = useState('')
@@ -78,8 +80,16 @@ function App() {
   const [tileEvals6, setTileEvals6] = useState([]);
   const [tileEvals7, setTileEvals7] = useState([]);
   const [tileEvals8, setTileEvals8] = useState([]);
+  const [gameOver5, setGameOver5] = useState(false);
+  const [gameOver6, setGameOver6] = useState(false);
+  const [gameOver7, setGameOver7] = useState(false);
+  const [gameOver8, setGameOver8] = useState(false);
   const [timer, setTimer] = useState(handleDate());
   
+  function handleClick(){
+    setInputFocus();
+    setGuessing('')
+  }
 
   useEffect(() => {
     const timeout = setInterval(() => {
@@ -100,8 +110,8 @@ function App() {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <NavLink to="/Five"><Button onClick={setInputFocus} variant='string'>Five</Button></NavLink>
-            <NavLink to="/Six"><Button onClick={setInputFocus} variant='string'>Six</Button></NavLink>
+            <NavLink to="/Five"><Button onClick={handleClick} variant='string'>Five</Button></NavLink>
+            <NavLink to="/Six"><Button onClick={handleClick} variant='string'>Six</Button></NavLink>
             <Typography 
                 variant="h4" 
                 component="div" 
@@ -111,8 +121,8 @@ function App() {
                     }}>
               Wordle XL
             </Typography>
-            <NavLink to="/Seven"><Button onClick={setInputFocus} variant='string'>Seven</Button></NavLink>
-            <NavLink to="/Eight"><Button onClick={setInputFocus} variant='string'>Eight</Button></NavLink>
+            <NavLink to="/Seven"><Button onClick={handleClick} variant='string'>Seven</Button></NavLink>
+            <NavLink to="/Eight"><Button onClick={handleClick} variant='string'>Eight</Button></NavLink>
           </div>
           <GameEndDialog timer={timer}/>
         </Toolbar>
@@ -133,6 +143,11 @@ function App() {
                           setTileEvals={setTileEvals5}
                           inputRef={inputRef}
                           setInputFocus={setInputFocus}
+                          gameOver={gameOver5}
+                          setGameOver={setGameOver5}
+                          guessing={guessing}
+                          setGuessing={setGuessing}
+
                             />}
                           />
         <Route path='six' 
@@ -146,6 +161,11 @@ function App() {
                           setTileEvals={setTileEvals6}
                           inputRef={inputRef}
                           setInputFocus={setInputFocus}
+                          gameOver={gameOver6}
+                          setGameOver={setGameOver6}
+                          guessing={guessing}
+                          setGuessing={setGuessing}
+
                           />}
                         />
         <Route path='seven' 
@@ -159,6 +179,10 @@ function App() {
                           setTileEvals={setTileEvals7}
                           inputRef={inputRef}
                           setInputFocus={setInputFocus}
+                          gameOver={gameOver7}
+                          setGameOver={setGameOver7}
+                          guessing={guessing}
+                          setGuessing={setGuessing}
 
                                                />}
                                             />
@@ -173,6 +197,10 @@ function App() {
                           setTileEvals={setTileEvals8}
                           inputRef={inputRef}
                           setInputFocus={setInputFocus}
+                          gameOver={gameOver8}
+                          setGameOver={setGameOver8}
+                          guessing={guessing}
+                          setGuessing={setGuessing}
 
                                                />}
                                             />

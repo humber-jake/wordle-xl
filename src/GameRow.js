@@ -1,10 +1,16 @@
 import React from 'react';
 import GameTile from './GameTile.js'
-import './styles/GameRowStyles.css'
+import styles from './styles/GameRowStyles.js'
+// import './styles/GameRowStyles.css'
+import { createUseStyles } from 'react-jss';
+
+const useStyles = createUseStyles(styles);
 
 function GameRow(props) {
-
-    const { answer, boardState, id, guessing, currentGuess, tileEvals, gameOver, wobble } = props;
+    
+    const classes = useStyles();
+    
+    const { answer, boardState, idx, guessing, currentGuess, tileEvals, gameOver, wobble } = props;
     const tiles = [...Array(answer.length)]
     
     const row = tiles.map((t,i) => {
@@ -13,18 +19,19 @@ function GameRow(props) {
             // renders controlled input if currentGuess is true
             return <GameTile key={i} i={i} answer={answer} letter={guessing[i]} highlighted={highlighted}/>
         }
-        if(boardState[id]){
+        if(boardState[idx]){
             // else renders row with evaluations
             const evaluation = tileEvals[i];
-            return <GameTile key={i} i={i} answer={answer} letter={boardState[id][i]} evaluation={evaluation}  gameOver={gameOver}/>   
+            return <GameTile key={i} i={i} answer={answer} letter={boardState[idx][i]} evaluation={evaluation}  isWinner={boardState[idx] === answer ? true : false}/>   
         } else {
             // else renders empty row
             return <GameTile key={i} i={i} answer={answer}/> 
         }
     })
-
+  
+    
     return (
-        <div className={`GameRow ${wobble ? 'wobble' : ''} ${ boardState.length -1 === id ? gameOver : '' }`}>
+        <div className={`${classes.GameRow} ${wobble ? classes.wobble : ''}`}>
             {row}
         </div>
     );

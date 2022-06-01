@@ -8,14 +8,15 @@ function GameBoard(props) {
     const {answer, maxAttempts, validateGuess, 
             boardState, setBoardState, 
             tileEvals, setTileEvals, 
-            inputRef, setInputFocus} = props;
+            inputRef, setInputFocus,
+            gameOver, setGameOver,
+            guessing, setGuessing
+        } = props;
 
     const flipTime = answer.length * 200;
     const rows = [...Array(maxAttempts)];
-    const [guessing, setGuessing] = useState('');
     const [wobble, setWobble] = useState(...[Array(rows.length)]);
     const [isEvaluating, setIsEvaluating] = useState(false);
-    const [gameOver, setGameOver] = useState(false);
     const [guessedLetters, setGuessedLetters] = useState({});
 
 
@@ -29,7 +30,7 @@ function GameBoard(props) {
     const board = rows.map((r,i) => {
         return <GameRow 
                     key={i} 
-                    id={i} 
+                    idx={i} 
                     answer={answer} 
                     boardState={boardState} 
                     guessing={guessing} 
@@ -135,7 +136,7 @@ function GameBoard(props) {
                             maxLength={`${answer.length}`} 
                             value={guessing} 
                             onChange={handleChange} 
-                            disabled={gameOver} 
+                            disabled={gameOver}
                             required
                         />
                         <button className='GameBoard-Button' type='submit' onClick={handleSubmit} disabled={isEvaluating}>Guess</button>
@@ -143,7 +144,7 @@ function GameBoard(props) {
                 </div>
             </div>
             <div className='keyboard-container'>
-                <Keyboard handleSubmit={handleSubmit} guessedLetters={guessedLetters}/>
+                <Keyboard handleSubmit={handleSubmit} guessedLetters={guessedLetters} answer={answer}/>
             </div>
         </div>
     );
