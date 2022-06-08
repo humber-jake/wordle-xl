@@ -12,5 +12,6 @@ div a.active{
     border-radius: 5px;
     transition: background-color 500ms;
 }
-
-
+.disabled{
+    pointer-events: none;
+}

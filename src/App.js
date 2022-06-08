@@ -15,8 +15,6 @@ import { AppBar, Toolbar, Typography, Button} from '@mui/material';
 import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
 
 
-// [TODO]: Move more logic from the GameBoard component to the App component, make it carry across 
-
 
 function handleDate(){
 
@@ -84,6 +82,11 @@ function App() {
   const [gameOver6, setGameOver6] = useState(false);
   const [gameOver7, setGameOver7] = useState(false);
   const [gameOver8, setGameOver8] = useState(false);
+  const [guessedLetters5, setGuessedLetters5] = useState({});
+  const [guessedLetters6, setGuessedLetters6] = useState({});
+  const [guessedLetters7, setGuessedLetters7] = useState({});
+  const [guessedLetters8, setGuessedLetters8] = useState({});
+  const [animating, setAnimating] = useState(false);
   const [timer, setTimer] = useState(handleDate());
   
   function handleClick(){
@@ -110,8 +113,8 @@ function App() {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <NavLink to="/Five"><Button onClick={handleClick} variant='string'>Five</Button></NavLink>
-            <NavLink to="/Six"><Button onClick={handleClick} variant='string'>Six</Button></NavLink>
+            <NavLink to="/Five" className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>Five</Button></NavLink>
+            <NavLink to="/Six" className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>Six</Button></NavLink>
             <Typography 
                 variant="h4" 
                 component="div" 
@@ -121,8 +124,8 @@ function App() {
                     }}>
               Wordle XL
             </Typography>
-            <NavLink to="/Seven"><Button onClick={handleClick} variant='string'>Seven</Button></NavLink>
-            <NavLink to="/Eight"><Button onClick={handleClick} variant='string'>Eight</Button></NavLink>
+            <NavLink to="/Seven" className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>Seven</Button></NavLink>
+            <NavLink to="/Eight" className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>Eight</Button></NavLink>
           </div>
           <GameEndDialog timer={timer}/>
         </Toolbar>
@@ -147,8 +150,12 @@ function App() {
                           setGameOver={setGameOver5}
                           guessing={guessing}
                           setGuessing={setGuessing}
-
-                            />}
+                          guessedLetters={guessedLetters5}
+                          setGuessedLetters={setGuessedLetters5}
+                          animating={animating}
+                          setAnimating={setAnimating}
+                          
+                          />}
                           />
         <Route path='six' 
                element={<GameBoard 
@@ -165,9 +172,15 @@ function App() {
                           setGameOver={setGameOver6}
                           guessing={guessing}
                           setGuessing={setGuessing}
-
+                          guessedLetters={guessedLetters6}
+                          setGuessedLetters={setGuessedLetters6}
+                          animating={animating}
+                          setAnimating={setAnimating}
+                          
+                          
+                          
                           />}
-                        />
+                          />
         <Route path='seven' 
                element={<GameBoard 
                           answer={SevenLetterWord} 
@@ -183,9 +196,14 @@ function App() {
                           setGameOver={setGameOver7}
                           guessing={guessing}
                           setGuessing={setGuessing}
-
-                                               />}
-                                            />
+                          guessedLetters={guessedLetters7}
+                          setGuessedLetters={setGuessedLetters7}
+                          animating={animating}
+                          setAnimating={setAnimating}
+                          
+                          
+                          />}
+                          />
         <Route path='eight' 
                element={<GameBoard 
                           answer={EightLetterWord} 
@@ -201,6 +219,11 @@ function App() {
                           setGameOver={setGameOver8}
                           guessing={guessing}
                           setGuessing={setGuessing}
+                          guessedLetters={guessedLetters8}
+                          setGuessedLetters={setGuessedLetters8}
+                          animating={animating}
+                          setAnimating={setAnimating}
+                          
 
                                                />}
                                             />

@@ -36,17 +36,17 @@ function Keyboard(props) {
           borderRadius: "5px",
           justifyContent: "center",
           "&.correct": {
-            transition: `background-color ${answer.length * 300}ms`,
+            // transition: `background-color ${answer.length * 300}ms`,
             // transitionTimingFunction: "step-end",
             backgroundColor: "#6aaa64"
           },
           "&.present": {
-            transition: `background-color ${answer.length * 300}ms`,
+            // transition: `background-color ${answer.length * 300}ms`,
             // transitionTimingFunction: "step-end",
             backgroundColor: "#c9b458"
           },
           "&.absent": {
-            transition: `background-color ${answer.length * 300}ms`,
+            // transition: `background-color ${answer.length * 300}ms`,
             // transitionTimingFunction: "step-end",
             backgroundColor: "#787c7e"
           },
@@ -77,7 +77,8 @@ function Keyboard(props) {
     const classes = useStyles();
 
     const keys = rows.map(row => 
-        <div key={row} className={classes.KeyboardRow}>{Array.from(row).map(key => (
+        <div key={row} className={classes.KeyboardRow}>
+          {Array.from(row).map(key => (
             <span key={key} className={`${classes.KeyboardKey} ${guessedLetters[key]}`}>{key}</span>
 
             // [TODO]: onCLick the span - push {key} to input value / guessing

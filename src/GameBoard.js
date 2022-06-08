@@ -5,25 +5,25 @@ import Keyboard from './Keyboard'
 
 function GameBoard(props) {
 
-    const {answer, maxAttempts, validateGuess, 
+    const {answer, maxAttempts, validateGuess,
             boardState, setBoardState, 
             tileEvals, setTileEvals, 
             inputRef, setInputFocus,
             gameOver, setGameOver,
-            guessing, setGuessing
+            guessing, setGuessing,
+            animating, setAnimating,
+            guessedLetters, setGuessedLetters
         } = props;
 
-    const flipTime = answer.length * 200;
+    const flipTime = answer.length * 300 + 300;
     const rows = [...Array(maxAttempts)];
     const [wobble, setWobble] = useState(...[Array(rows.length)]);
     const [isEvaluating, setIsEvaluating] = useState(false);
-    const [guessedLetters, setGuessedLetters] = useState({});
-
 
     // Create wobble object based on number of rows
     useEffect(()=>{
         let res = []
-        rows.map((row, i) => res.push(false))
+        rows.map(row => res.push(false))
         setWobble(res)
     },[])
 
@@ -38,6 +38,7 @@ function GameBoard(props) {
                     tileEvals={tileEvals[i]}
                     gameOver={gameOver}
                     wobble={wobble[i]}
+                    animating={animating}
                 />
     })
     function handleChange(e){
@@ -89,13 +90,14 @@ function GameBoard(props) {
             if(result[l] === 'present') return;
             result[l] = evals.flat()[i];
         });
-        setGuessedLetters(result);
+        setTimeout(()=>{
+            setGuessedLetters(result);
+        }, (300 + 300 * answer.length));
     }
     
     function handleSubmit(e){
         if(guessing.length < answer.length) return;
         e.preventDefault();
-        console.log(validateGuess(guessing));
         if(validateGuess(guessing)){
             let res = wobble;
             res[boardState.length] = true;
@@ -115,6 +117,10 @@ function GameBoard(props) {
         setGuessing('')
         setTimeout(() => {
             setIsEvaluating(false);
+        }, flipTime);
+        setAnimating(true);
+        setTimeout(() => {
+            setAnimating(false);
         }, flipTime);
     }
 
