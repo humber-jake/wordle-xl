@@ -7,10 +7,35 @@ import CloseIcon from '@mui/icons-material/Close';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import Typography from '@mui/material/Typography';
 
+
+function getCountdown(){
+  
+  let today = new Date()
+  let tomorrow = new Date()
+  tomorrow.setDate(today.getDate() + 1)
+  tomorrow.setHours(0,0,0,0);
+  
+  let countdown = {
+    hours: Math.floor((tomorrow - today) / (1000 * 60 * 60)).toString().padStart(2,'0'),
+    minutes: Math.floor((tomorrow - today) % (1000 * 60 * 60) / (1000 * 60)).toString().padStart(2,'0'),
+    seconds: Math.floor((tomorrow - today) % (1000 * 60 * 60) / (1000) % 60).toString().padStart(2,'0'),
+  }
+  return countdown;
+}
+
+
 export default function GameEndDialog(props) {
 
-  const {timer} = props;
+  const [timer, setTimer] = React.useState(getCountdown());
   const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const timeout = setInterval(() => {
+      setTimer(getCountdown());
+    }, 1000);
+    return () => clearInterval(timeout);
+  }, [timer.seconds]);
+
 
   const handleClickOpen = () => {
     setOpen(true);

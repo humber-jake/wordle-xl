@@ -14,25 +14,6 @@ import shuffleSeed from 'shuffle-seed';
 import { AppBar, Toolbar, Typography, Button} from '@mui/material';
 import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
 
-
-
-function handleDate(){
-
-  
-  let today = new Date()
-  let tomorrow = new Date()
-  tomorrow.setDate(today.getDate() + 1)
-  tomorrow.setHours(0,0,0,0);
-  
-  let countdown = {
-    hours: Math.floor((tomorrow - today) / (1000 * 60 * 60)).toString().padStart(2,'0'),
-    minutes: Math.floor((tomorrow - today) % (1000 * 60 * 60) / (1000 * 60)).toString().padStart(2,'0'),
-      seconds: Math.floor((tomorrow - today) % (1000 * 60 * 60) / (1000) % 60).toString().padStart(2,'0'),
-    }
-    
-    return countdown;
-}
-  
 function getNewWord(PossibleAnswers){
   let shuffledAnswers = shuffleSeed.shuffle(PossibleAnswers, 'seed')
   let day = Math.floor(new Date() / (1000 * 60 * 60 * 24)) % shuffledAnswers.length;
@@ -87,19 +68,11 @@ function App() {
   const [guessedLetters7, setGuessedLetters7] = useState({});
   const [guessedLetters8, setGuessedLetters8] = useState({});
   const [animating, setAnimating] = useState(false);
-  const [timer, setTimer] = useState(handleDate());
   
   function handleClick(){
     setInputFocus();
     setGuessing('')
   }
-
-  useEffect(() => {
-    const timeout = setInterval(() => {
-      setTimer(handleDate());
-    }, 1000);
-    return () => clearInterval(timeout);
-  });
   
 
   return (
@@ -127,7 +100,7 @@ function App() {
             <NavLink to="/Seven" className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>Seven</Button></NavLink>
             <NavLink to="/Eight" className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>Eight</Button></NavLink>
           </div>
-          <GameEndDialog timer={timer}/>
+          <GameEndDialog/>
         </Toolbar>
       </AppBar>
 
