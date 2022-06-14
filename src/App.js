@@ -24,6 +24,7 @@ function getNewWord(PossibleAnswers){
 const answers = [FiveLetterAnswers, SixLetterAnswers, SevenLetterAnswers, EightLetterAnswers].map(arr => getNewWord(arr));
 const guesses = [FiveLetterGuesses, SixLetterGuesses, SevenLetterGuesses, EightLetterGuesses]
 const validations = {}
+const numStrings = ['Five','Six','Seven','Eight']
 
 answers.forEach((ans, i) => {
   validations[i] = function(guess){
@@ -87,7 +88,7 @@ const setState = {
     setGuessing('')
   }
 
-  const routes = ['five','six','seven','eight'].map((num, i) => 
+  const routes = numStrings.map((num, i) => 
       <Route path={num} key={num} 
               element={<GameBoard 
                         answer={answers[i]} 
@@ -110,31 +111,17 @@ const setState = {
                         />}
                 />
   )
+
+  const header = numStrings.map(num => <NavLink to={`/${num}`} className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>{num}</Button></NavLink>)
+
+  header.splice(header.length / 2, 0, <Typography variant="h4" component="div" sx={{fontFamily: "'Patua One', cursive;", margin: "0 2rem"}}>Wordle XL</Typography>)
   
   return (
     <div className="App">
-
       <AppBar position="static" color="transparent" sx={{ boxShadow: "none", borderBottom: "1px solid lightgray" }}>
         <Toolbar sx={{ minHeight: "50px !important"}} >
-          <div style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <NavLink to="/Five" className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>Five</Button></NavLink>
-            <NavLink to="/Six" className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>Six</Button></NavLink>
-            <Typography 
-                variant="h4" 
-                component="div" 
-                sx={{
-                      fontFamily: "'Patua One', cursive;",
-                      margin: "0 2rem"
-                    }}>
-              Wordle XL
-            </Typography>
-            <NavLink to="/Seven" className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>Seven</Button></NavLink>
-            <NavLink to="/Eight" className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>Eight</Button></NavLink>
+          <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            {header}
           </div>
           <GameEndDialog/>
         </Toolbar>
@@ -151,8 +138,6 @@ const setState = {
 }
 
 // [TODO]: stats
-
-// [TODO]: CSS to JSS to dynamically calculate flipTime / apply animations to all letters
 
 
 export default App;
