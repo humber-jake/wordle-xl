@@ -43,10 +43,10 @@ function App() {
   const [inputRef, setInputFocus] = useFocus();
   const [guessing, setGuessing] = useState('');
 
-  const [boardState, setBoardState] = useState([[],[],[],[]])
-  const [tileEvals, setTileEvals] = useState([[],[],[],[]]);
-  const [gameOver, setGameOver] = useState([false, false, false, false]);
-  const [guessedLetters, setGuessedLetters] = useState([{}, {}, {}, {}]);
+  const [boardState, setBoardState] = useState(Array.from(numStrings, x => []))
+  const [tileEvals, setTileEvals] = useState(Array.from(numStrings, x => []));
+  const [gameOver, setGameOver] = useState(Array.from(numStrings, x => false));
+  const [guessedLetters, setGuessedLetters] = useState(Array.from(numStrings, x => []));
   const [animating, setAnimating] = useState(false);
 
 const setState = {
@@ -112,9 +112,9 @@ const setState = {
                 />
   )
 
-  const header = numStrings.map(num => <NavLink to={`/${num}`} className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>{num}</Button></NavLink>)
+  const header = numStrings.map((num, i) => <NavLink to={`/${num}`} key={num} className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>{num}</Button></NavLink>)
 
-  header.splice(header.length / 2, 0, <Typography variant="h4" component="div" sx={{fontFamily: "'Patua One', cursive;", margin: "0 2rem"}}>Wordle XL</Typography>)
+  header.splice(header.length / 2, 0, <Typography key='title' variant="h4" component="div" sx={{fontFamily: "'Patua One', cursive;", margin: "0 2rem"}}>Wordle XL</Typography>)
   
   return (
     <div className="App">
