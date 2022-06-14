@@ -21,24 +21,15 @@ function getNewWord(PossibleAnswers){
     return shuffledAnswers[day];
 }
 
-let FiveLetterWord = getNewWord(FiveLetterAnswers)
-let SixLetterWord = getNewWord(SixLetterAnswers)
-let SevenLetterWord = getNewWord(SevenLetterAnswers)
-let EightLetterWord = getNewWord(EightLetterAnswers)
+const answers = [FiveLetterAnswers, SixLetterAnswers, SevenLetterAnswers, EightLetterAnswers].map(arr => getNewWord(arr));
+const guesses = [FiveLetterGuesses, SixLetterGuesses, SevenLetterGuesses, EightLetterGuesses]
+const validations = {}
 
-function validateFiveLetterGuess(guess){
-  return !FiveLetterGuesses.includes(guess);
-}
-function validateSixLetterGuess(guess){
-  return !SixLetterGuesses.includes(guess);
-}
-function validateSevenLetterGuess(guess){
-  return !SevenLetterGuesses.includes(guess);
-}
-function validateEightLetterGuess(guess){
-  return !EightLetterGuesses.includes(guess);
-}
-
+answers.forEach((ans, i) => {
+  validations[i] = function(guess){
+    return !guesses[i].includes(guess);
+  }
+})
 
 function App() {
 
@@ -51,30 +42,75 @@ function App() {
   const [inputRef, setInputFocus] = useFocus();
   const [guessing, setGuessing] = useState('');
 
-  const [boardState5, setBoardState5] = useState('')
-  const [boardState6, setBoardState6] = useState('')
-  const [boardState7, setBoardState7] = useState('')
-  const [boardState8, setBoardState8] = useState('')
-  const [tileEvals5, setTileEvals5] = useState([]);
-  const [tileEvals6, setTileEvals6] = useState([]);
-  const [tileEvals7, setTileEvals7] = useState([]);
-  const [tileEvals8, setTileEvals8] = useState([]);
-  const [gameOver5, setGameOver5] = useState(false);
-  const [gameOver6, setGameOver6] = useState(false);
-  const [gameOver7, setGameOver7] = useState(false);
-  const [gameOver8, setGameOver8] = useState(false);
-  const [guessedLetters5, setGuessedLetters5] = useState({});
-  const [guessedLetters6, setGuessedLetters6] = useState({});
-  const [guessedLetters7, setGuessedLetters7] = useState({});
-  const [guessedLetters8, setGuessedLetters8] = useState({});
+  const [boardState, setBoardState] = useState([[],[],[],[]])
+  const [tileEvals, setTileEvals] = useState([[],[],[],[]]);
+  const [gameOver, setGameOver] = useState([false, false, false, false]);
+  const [guessedLetters, setGuessedLetters] = useState([{}, {}, {}, {}]);
   const [animating, setAnimating] = useState(false);
+
+const setState = {
+    setBoardState: {},
+    setTileEvals: {},
+    setGameOver: {},
+    setGuessedLetters: {},
+  };
+
+  boardState.forEach((board, i) => {
+
+    setState.setBoardState[i] = function(update){
+      let newState = boardState;
+      newState[i] = update;
+      setBoardState(newState)
+    }
+
+    setState.setTileEvals[i] = function(update){
+      let newState = tileEvals;
+      newState[i] = update;
+      setTileEvals(newState)
+    }
+
+    setState.setGameOver[i] = function(update){
+      let newState = gameOver;
+      newState[i] = update;
+      setGameOver(newState)
+    }
+
+    setState.setGuessedLetters[i] = function(update){
+      let newState = guessedLetters;
+      newState[i] = update;
+      setGuessedLetters(newState)
+    }
+  })
   
   function handleClick(){
     setInputFocus();
     setGuessing('')
   }
-  
 
+  const routes = ['five','six','seven','eight'].map((num, i) => 
+      <Route path={num} key={num} 
+              element={<GameBoard 
+                        answer={answers[i]} 
+                        maxAttempts={6} 
+                        boardState={boardState[i]} 
+                        setBoardState={setState.setBoardState[i]} 
+                        validateGuess={validations[i]}
+                        tileEvals={tileEvals[i]}
+                        setTileEvals={setState.setTileEvals[i]}
+                        inputRef={inputRef}
+                        setInputFocus={setInputFocus}
+                        gameOver={gameOver[i]}
+                        setGameOver={setState.setGameOver[i]}
+                        guessing={guessing}
+                        setGuessing={setGuessing}
+                        guessedLetters={guessedLetters[i]}
+                        setGuessedLetters={setState.setGuessedLetters[i]}
+                        animating={animating}
+                        setAnimating={setAnimating}
+                        />}
+                />
+  )
+  
   return (
     <div className="App">
 
@@ -105,101 +141,8 @@ function App() {
       </AppBar>
 
       <Routes>
-        <Route path='/' 
-               element={<Navigate to="/five" />}
-               />
-        <Route path='five' 
-               element={<GameBoard 
-                          answer={FiveLetterWord} 
-                          maxAttempts={6} 
-                          boardState={boardState5} 
-                          setBoardState={setBoardState5} 
-                          validateGuess={validateFiveLetterGuess}
-                          tileEvals={tileEvals5}
-                          setTileEvals={setTileEvals5}
-                          inputRef={inputRef}
-                          setInputFocus={setInputFocus}
-                          gameOver={gameOver5}
-                          setGameOver={setGameOver5}
-                          guessing={guessing}
-                          setGuessing={setGuessing}
-                          guessedLetters={guessedLetters5}
-                          setGuessedLetters={setGuessedLetters5}
-                          animating={animating}
-                          setAnimating={setAnimating}
-                          
-                          />}
-                          />
-        <Route path='six' 
-               element={<GameBoard 
-                          answer={SixLetterWord} 
-                          maxAttempts={6} 
-                          boardState={boardState6} 
-                          setBoardState={setBoardState6} 
-                          validateGuess={validateSixLetterGuess}
-                          tileEvals={tileEvals6}
-                          setTileEvals={setTileEvals6}
-                          inputRef={inputRef}
-                          setInputFocus={setInputFocus}
-                          gameOver={gameOver6}
-                          setGameOver={setGameOver6}
-                          guessing={guessing}
-                          setGuessing={setGuessing}
-                          guessedLetters={guessedLetters6}
-                          setGuessedLetters={setGuessedLetters6}
-                          animating={animating}
-                          setAnimating={setAnimating}
-                          
-                          
-                          
-                          />}
-                          />
-        <Route path='seven' 
-               element={<GameBoard 
-                          answer={SevenLetterWord} 
-                          maxAttempts={6} 
-                          boardState={boardState7} 
-                          setBoardState={setBoardState7} 
-                          validateGuess={validateSevenLetterGuess}
-                          tileEvals={tileEvals7}
-                          setTileEvals={setTileEvals7}
-                          inputRef={inputRef}
-                          setInputFocus={setInputFocus}
-                          gameOver={gameOver7}
-                          setGameOver={setGameOver7}
-                          guessing={guessing}
-                          setGuessing={setGuessing}
-                          guessedLetters={guessedLetters7}
-                          setGuessedLetters={setGuessedLetters7}
-                          animating={animating}
-                          setAnimating={setAnimating}
-                          
-                          
-                          />}
-                          />
-        <Route path='eight' 
-               element={<GameBoard 
-                          answer={EightLetterWord} 
-                          maxAttempts={6} 
-                          boardState={boardState8} 
-                          setBoardState={setBoardState8} 
-                          validateGuess={validateEightLetterGuess}
-                          tileEvals={tileEvals8}
-                          setTileEvals={setTileEvals8}
-                          inputRef={inputRef}
-                          setInputFocus={setInputFocus}
-                          gameOver={gameOver8}
-                          setGameOver={setGameOver8}
-                          guessing={guessing}
-                          setGuessing={setGuessing}
-                          guessedLetters={guessedLetters8}
-                          setGuessedLetters={setGuessedLetters8}
-                          animating={animating}
-                          setAnimating={setAnimating}
-                          
-
-                                               />}
-                                            />
+        <Route path='/' element={<Navigate to="/five" />} />
+        {routes}
       </Routes>
 
     

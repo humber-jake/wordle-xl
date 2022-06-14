@@ -27,20 +27,6 @@ function GameBoard(props) {
         setWobble(res)
     },[])
 
-    const board = rows.map((r,i) => {
-        return <GameRow 
-                    key={i} 
-                    idx={i} 
-                    answer={answer} 
-                    boardState={boardState} 
-                    guessing={guessing} 
-                    currentGuess={i === boardState.length}
-                    tileEvals={tileEvals[i]}
-                    gameOver={gameOver}
-                    wobble={wobble[i]}
-                    animating={animating}
-                />
-    })
     function handleChange(e){
         setGuessing(e.target.value.replace(/[^a-zA-Z]/ig,''));
     }
@@ -51,7 +37,7 @@ function GameBoard(props) {
         if(!keys.includes(e.keyCode)) e.preventDefault();
     }
 
-    function evaluateGuess(){
+    function evaluateGuess(guessing){
         let result = Array(answer.length)
         let ans = Array.from(answer.toLowerCase())
         let guess = Array.from(guessing.toLowerCase())
@@ -108,10 +94,10 @@ function GameBoard(props) {
             }, 450)
             return;
         } 
-        evaluateGuess();
+        evaluateGuess(guessing);
         setIsEvaluating(true);
         setBoardState([...boardState, guessing]);
-        localStorage.setItem(`boardState${guessing.length}`, JSON.stringify([...boardState, guessing]))
+        localStorage.setItem(`boardState${answer.length}`, JSON.stringify([...boardState, guessing]))
         if(guessing === answer) setGameOver('winner')
         else if(boardState.length + 1 === maxAttempts) setGameOver('loser');
         setGuessing('')
@@ -123,6 +109,22 @@ function GameBoard(props) {
             setAnimating(false);
         }, flipTime);
     }
+
+    const board = rows.map((r,i) => {
+        return <GameRow 
+                    key={i} 
+                    idx={i} 
+                    answer={answer} 
+                    boardState={boardState} 
+                    guessing={guessing} 
+                    currentGuess={i === boardState.length}
+                    tileEvals={tileEvals[i] || []}
+                    gameOver={gameOver}
+                    wobble={wobble[i]}
+                    animating={animating}
+                />
+    })
+
 
     useEffect(()=> {
         updateKeyboard([...boardState], [...tileEvals])
