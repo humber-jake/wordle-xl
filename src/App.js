@@ -177,8 +177,8 @@ const routes = numStrings.map((num, i) =>
       </AppBar>
 
       <Routes>
-        <Route path='/' element={<Navigate to="/five" />} />
         {routes}
+        <Route path='*' element={<Navigate to="/five" />} />
       </Routes>
 
     
