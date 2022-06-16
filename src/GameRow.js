@@ -1,18 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useImperativeHandle } from 'react';
 import GameTile from './GameTile.js'
 import styles from './styles/GameRowStyles.js'
-// import './styles/GameRowStyles.css'
 import { createUseStyles } from 'react-jss';
+import { forwardRef } from 'react';
 
 const useStyles = createUseStyles(styles);
 
-function GameRow(props) {
+function GameRow(props, ref){
+
+    const [wobble, setWobble] = useState(false);
+
+    const triggerWobble = () => {
+        setWobble(true);
+        setTimeout(() => {
+            setWobble(false);
+        }, 450);
+    };
+
+    useImperativeHandle(ref, () => ({
+        triggerWobble: triggerWobble
+    }));
     
     const classes = useStyles();
     
-    const { answer, boardState, idx, guessing, currentGuess, tileEvals, gameOver, wobble, animating } = props;
+    const { answer, boardState, idx, guessing, currentGuess, tileEvals, gameOver, animating } = props;
     const tiles = [...Array(answer.length)]
-    
 
     const row = tiles.map((t,i) => {
         const highlighted = guessing.length > i;
@@ -30,13 +42,14 @@ function GameRow(props) {
             return <GameTile key={i} i={i} answer={answer}/> 
         }
     })
-  
     
     return (
-        <div className={`${classes.GameRow} ${wobble ? classes.wobble : ''}`}>
+        <div className={`${classes.GameRow} ${ wobble ? classes.wobble : ''}`}>
             {row}
         </div>
     );
 }
+
+GameRow = forwardRef(GameRow);
 
 export default GameRow;

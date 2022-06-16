@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import GameRow from './GameRow.js'
 import './styles/GameBoardStyles.css'
 import Keyboard from './Keyboard'
+import { useMemo } from 'react';
+
+
 
 function GameBoard(props) {
 
@@ -17,16 +20,11 @@ function GameBoard(props) {
 
     const flipTime = answer.length * 300 + 300;
     const rows = [...Array(maxAttempts)];
-    const [wobble, setWobble] = useState(...[Array(rows.length)]);
+    const wobbles = useMemo(() => rows.map(() => React.createRef()))
+
     const [isEvaluating, setIsEvaluating] = useState(false);
-
-    // Create wobble object based on number of rows
-    useEffect(()=>{
-        let res = []
-        rows.map(row => res.push(false))
-        setWobble(res)
-    },[])
-
+    
+    // Allow only letters
     function handleChange(e){
         setGuessing(e.target.value.replace(/[^a-zA-Z]/ig,''));
     }
@@ -82,16 +80,10 @@ function GameBoard(props) {
     }
     
     function handleSubmit(e){
-        if(guessing.length < answer.length) return;
         e.preventDefault();
+        if(guessing.length < answer.length) return;
         if(validateGuess(guessing)){
-            let res = wobble;
-            res[boardState.length] = true;
-            setWobble(res)
-            setTimeout(() => {
-                res[boardState.length] = false;
-                setWobble(res)
-            }, 450)
+            wobbles[boardState.length].current.triggerWobble()
             return;
         } 
         evaluateGuess(guessing);
@@ -99,8 +91,9 @@ function GameBoard(props) {
         setBoardState([...boardState, guessing]);
         localStorage.setItem(`boardState${answer.length}`, JSON.stringify([...boardState, guessing]))
         if(guessing === answer) setGameOver('winner')
-        else if(boardState.length + 1 === maxAttempts) setGameOver('loser');
+        else if(boardState.length === maxAttempts) setGameOver('loser');
         setGuessing('')
+
         setTimeout(() => {
             setIsEvaluating(false);
         }, flipTime);
@@ -110,8 +103,14 @@ function GameBoard(props) {
         }, flipTime);
     }
 
+
+    useEffect(()=> {
+        updateKeyboard([...boardState], [...tileEvals])
+    })
+
     const board = rows.map((r,i) => {
         return <GameRow 
+                    ref={wobbles[i]} 
                     key={i} 
                     idx={i} 
                     answer={answer} 
@@ -120,14 +119,8 @@ function GameBoard(props) {
                     currentGuess={i === boardState.length}
                     tileEvals={tileEvals[i] || []}
                     gameOver={gameOver}
-                    wobble={wobble[i]}
                     animating={animating}
                 />
-    })
-
-
-    useEffect(()=> {
-        updateKeyboard([...boardState], [...tileEvals])
     })
  
     return (
@@ -140,8 +133,8 @@ function GameBoard(props) {
                             onKeyDown={handleKeyDown} 
                             ref={inputRef} 
                             type="text" 
-                            minLength={`${answer.length}`} 
-                            maxLength={`${answer.length}`} 
+                            minLength={answer.length} 
+                            maxLength={answer.length} 
                             value={guessing} 
                             onChange={handleChange} 
                             disabled={gameOver}
