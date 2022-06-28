@@ -28,8 +28,17 @@ export default function GameEndDialog(props) {
 
   const [timer, setTimer] = React.useState(getCountdown());
   const [open, setOpen] = React.useState(false);
+  const {reset} = props;
 
   React.useEffect(() => {
+
+    if(timer.hours === '00' && timer.minutes === '00' && timer.seconds === '00' ){
+      // using setTimeout to account for the second between a zeroed out clock and a new day
+      setTimeout(() => {
+        reset();
+      }, 1000)
+    }
+
     const timeout = setInterval(() => {
       setTimer(getCountdown());
     }, 1000);

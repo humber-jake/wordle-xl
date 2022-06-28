@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useRef, useEffect, useMemo, createRef, useImperativeHandle, forwardRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import GameBoard from './GameBoard.js'
 import GameEndDialog from './GameEndDialog.js'
 import FiveLetterAnswers from './wordlists/5-letter-answers'
@@ -13,54 +13,67 @@ import EightLetterGuesses from './wordlists/8-letter-guesses'
 import shuffleSeed from 'shuffle-seed';
 import { AppBar, Toolbar, Typography, Button} from '@mui/material';
 import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
-import { SecurityUpdate } from '@mui/icons-material';
 
-
-function getNewWord(PossibleAnswers){
-  let shuffledAnswers = shuffleSeed.shuffle(PossibleAnswers, 'seed')
-  let day = Math.floor(new Date() / (1000 * 60 * 60 * 24)) % shuffledAnswers.length;
-    console.log(`#${day}: ${shuffledAnswers[day]}` )
-    return shuffledAnswers[day];
-}
-
-const answers = [FiveLetterAnswers, SixLetterAnswers, SevenLetterAnswers, EightLetterAnswers].map(arr => getNewWord(arr));
-const guesses = [FiveLetterGuesses, SixLetterGuesses, SevenLetterGuesses, EightLetterGuesses]
-const validations = {}
-const numStrings = ['Five','Six','Seven','Eight']
-
-answers.forEach((ans, i) => {
-  validations[i] = function(guess){
-    return !guesses[i].includes(guess);
+  const getAnswers = () => {
+      function getNewWord(PossibleAnswers){
+        let shuffledAnswers = shuffleSeed.shuffle(PossibleAnswers, 'seed')
+        let day = Math.floor(new Date() / (1000 * 60 * 60 * 24)) % shuffledAnswers.length;
+          console.log(`#${day}: ${shuffledAnswers[day]}` )
+          return shuffledAnswers[day];
+      }
+      return [FiveLetterAnswers, SixLetterAnswers, SevenLetterAnswers, EightLetterAnswers].map(arr => getNewWord(arr));
   }
-})
 
+  let answers = getAnswers();
+  const guesses = [FiveLetterGuesses, SixLetterGuesses, SevenLetterGuesses, EightLetterGuesses]
+  const validations = {}
+  const numStrings = ['Five','Six','Seven','Eight']
+  
+  answers.forEach((ans, i) => {
+    validations[i] = function(guess){
+      return !guesses[i].includes(guess);
+    }
+  })
 
 function App() {
+  
 
   const useFocus = () => {
     const htmlElRef = useRef(null)
     const setFocus = () => {htmlElRef.current &&  htmlElRef.current.focus()}
     return [ htmlElRef, setFocus ] 
-}
+  }
 
 
-const [inputRef, setInputFocus] = useFocus();
-const [guessing, setGuessing] = useState('');
-const [didMount, setDidMount] = useState(false);
+  const [inputRef, setInputFocus] = useFocus();
+  const [didMount, setDidMount] = useState(false);
+  const [guessing, setGuessing] = useState('');
 
 
-// initialize master state objects containing state for each board
+  // initialize master state objects containing state for each board
   const [boardState, setBoardState] = useState(Array.from(numStrings, x => []))
   const [tileEvals, setTileEvals] = useState(Array.from(numStrings, x => []));
   const [gameOver, setGameOver] = useState(Array.from(numStrings, x => false));
   const [guessedLetters, setGuessedLetters] = useState(Array.from(numStrings, x => []));
   const [animating, setAnimating] = useState(false);
 
+
+  function reset(){
+      answers = getAnswers();
+      setGuessing('');
+      setBoardState(Array.from(numStrings, x => []))
+      setTileEvals(Array.from(numStrings, x => []));
+      setGameOver(Array.from(numStrings, x => false));
+      setGuessedLetters(Array.from(numStrings, x => {}));
+      setAnimating(false);
+  }
+
   function handleClick(){
     setInputFocus();
     setGuessing('')
   }
   
+  // Create setstate functions for each board
   const setState = {
     setBoardState: {},
     setTileEvals: {},
@@ -69,7 +82,6 @@ const [didMount, setDidMount] = useState(false);
     updateKeyboard: {},
   };
 
-  // Create setstate functions for each board
   boardState.forEach((board, i) => {
 
     setState.setBoardState[i] = function(update){
@@ -98,16 +110,13 @@ const [didMount, setDidMount] = useState(false);
 
     setState.updateKeyboard[i] = function(words, evals, isFromStorage){
       let result = {}
-
       if(words.length <= 0) return;
-      
       words.join('').split('').forEach((l,i) => {
           if(result[l] === 'correct') return;
           if(evals.flat()[i] === 'correct') result[l] = evals.flat()[i];
           if(result[l] === 'present') return;
           result[l] = evals.flat()[i];
       });
-
       if(isFromStorage){
         setState.setGuessedLetters[i](result);
       } else {
@@ -116,18 +125,20 @@ const [didMount, setDidMount] = useState(false);
         }, (300 + 300 * answers[i].length));
       }
     }
-
   })
 
   // =================================
   // Getting boardstate from Local Storage
   // =================================
   
+
   const updateRef = useRef();
 
   useEffect(() => {
 
     setInputFocus();
+
+      // reset()
 
     let newBoardState = boardState;
     numStrings.forEach((num, i) => {
@@ -213,7 +224,7 @@ const routes = numStrings.map((num, i) =>
           <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             {header}
           </div>
-          <GameEndDialog/>
+          <GameEndDialog reset={reset}/>
         </Toolbar>
       </AppBar>
 

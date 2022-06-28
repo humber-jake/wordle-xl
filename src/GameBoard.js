@@ -13,6 +13,18 @@ const useStyles = createUseStyles(styles);
 
 function GameBoard(props,ref) {
 
+    // Erase guesses if more than a day old
+    useEffect(()=> {
+        let today = new Date().setHours(0,0,0,0);
+        if(localStorage.getItem(`lastPlayed${answer.length}`) && today != localStorage.getItem(`lastPlayed${answer.length}`)){
+            setBoardState([])
+            setTileEvals([])
+            setGameOver(false)
+            setGuessedLetters({})
+            localStorage.setItem(`boardState${answer.length}`, [])
+        }
+    }, [])
+
     const [update, setUpdate] = useState(false)
 
     const triggerUpdate = () => {
@@ -90,6 +102,10 @@ function GameBoard(props,ref) {
             wobbles[boardState.length].current.triggerWobble()
             return;
         } 
+
+        let lastPlayed = new Date().setHours(0,0,0,0);
+        localStorage.setItem(`lastPlayed${answer.length}`, lastPlayed)
+
         evaluateGuess(guessing);
         setIsEvaluating(true);
         setBoardState([...boardState, guessing]);
