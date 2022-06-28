@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useMemo, createRef, useImperativeHandle, forwardRef } from 'react';
 import GameBoard from './GameBoard.js'
 import GameEndDialog from './GameEndDialog.js'
 import FiveLetterAnswers from './wordlists/5-letter-answers'
@@ -13,6 +13,7 @@ import EightLetterGuesses from './wordlists/8-letter-guesses'
 import shuffleSeed from 'shuffle-seed';
 import { AppBar, Toolbar, Typography, Button} from '@mui/material';
 import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
+import { SecurityUpdate } from '@mui/icons-material';
 
 
 function getNewWord(PossibleAnswers){
@@ -33,6 +34,7 @@ answers.forEach((ans, i) => {
   }
 })
 
+
 function App() {
 
   const useFocus = () => {
@@ -41,13 +43,10 @@ function App() {
     return [ htmlElRef, setFocus ] 
 }
 
-  function handleClick(){
-    setInputFocus();
-    setGuessing('')
-  }
-  
-  const [inputRef, setInputFocus] = useFocus();
-  const [guessing, setGuessing] = useState('');
+
+const [inputRef, setInputFocus] = useFocus();
+const [guessing, setGuessing] = useState('');
+const [didMount, setDidMount] = useState(false);
 
 
 // initialize master state objects containing state for each board
@@ -57,12 +56,17 @@ function App() {
   const [guessedLetters, setGuessedLetters] = useState(Array.from(numStrings, x => []));
   const [animating, setAnimating] = useState(false);
 
-
+  function handleClick(){
+    setInputFocus();
+    setGuessing('')
+  }
+  
   const setState = {
     setBoardState: {},
     setTileEvals: {},
     setGameOver: {},
     setGuessedLetters: {},
+    updateKeyboard: {},
   };
 
   // Create setstate functions for each board
@@ -91,55 +95,87 @@ function App() {
       newState[i] = update;
       setGuessedLetters(newState)
     }
+
+    setState.updateKeyboard[i] = function(words, evals, isFromStorage){
+      let result = {}
+
+      if(words.length <= 0) return;
+      
+      words.join('').split('').forEach((l,i) => {
+          if(result[l] === 'correct') return;
+          if(evals.flat()[i] === 'correct') result[l] = evals.flat()[i];
+          if(result[l] === 'present') return;
+          result[l] = evals.flat()[i];
+      });
+
+      if(isFromStorage){
+        setState.setGuessedLetters[i](result);
+      } else {
+        setTimeout(()=>{
+            setState.setGuessedLetters[i](result);
+        }, (300 + 300 * answers[i].length));
+      }
+    }
+
   })
 
-  // useEffect(() => {
-  //   numStrings.forEach((num, i) => {
-  //     if(localStorage.getItem(`boardState${i+5}`)){
+  // =================================
+  // Getting boardstate from Local Storage
+  // =================================
+  
+  const updateRef = useRef();
 
-  //       let newBoardState = boardState;
-  //       newBoardState[i] = JSON.parse(localStorage.getItem(`boardState${i+5}`))
-  //       setBoardState(newBoardState);
-  //     }
-  //   })
+  useEffect(() => {
 
-  //   let newTileEvals = tileEvals;
+    setInputFocus();
 
-  //   boardState.forEach((board, boardIndex) => {
-  //     board.forEach((word, wordIndex) => {
-  //       let result = Array(answers[boardIndex].length)
-  //       let ans = Array.from(answers[boardIndex].toLowerCase())
-  //       let guess = Array.from(word.toLowerCase())
-
-  //       // check greens, then remove matches from arrays to avoid double counting
-  //       guess.forEach((l, i) => {
-  //           if(ans[i] === l){
-  //               result[i] = 'correct';
-  //               ans[i] = undefined;
-  //               guess[i] = null;
-  //           }
-  //       })
-
-  //       // check yellows
-  //       guess.forEach((l, i) => {
-  //           if(ans.includes(l)){
-  //               result[i] = 'present';
-  //               ans[ans.indexOf(l)] = undefined;
-  //           }
-  //       })
+    let newBoardState = boardState;
+    numStrings.forEach((num, i) => {
+      if(localStorage.getItem(`boardState${i+5}`)){
+        newBoardState[i] = JSON.parse(localStorage.getItem(`boardState${i+5}`))
+        setBoardState(newBoardState);
+      }
+    })
+    
+    let newTileEvals = tileEvals;
+    
+    boardState.forEach((board, boardIndex) => {
+      board.forEach((word, wordIndex) => {
+        let result = Array(answers[boardIndex].length)
+        let ans = Array.from(answers[boardIndex].toLowerCase())
+        let guess = Array.from(word.toLowerCase())
+    
+        // check greens, then remove matches from arrays to avoid double counting
+        guess.forEach((l, i) => {
+              if(ans[i] === l){
+                    result[i] = 'correct';
+                    ans[i] = undefined;
+                    guess[i] = null;
+                }
+        })
+    
+        // check yellows
+        guess.forEach((l, i) => {
+            if(ans.includes(l)){
+                  result[i] = 'present';
+                ans[ans.indexOf(l)] = undefined;
+            }
+        })
         
-  //       // make rest absent
-  //       result = [...result].map(i => i === undefined ? 'absent' : i);
-
-  //       newTileEvals[boardIndex].push(result);
-  //     })
-  //   })
-  //   setTileEvals(newTileEvals);
-  // }, tileEvals)
+        // make rest absent
+        result = [...result].map(i => i === undefined ? 'absent' : i);
+        newTileEvals[boardIndex].push(result);
+      })
+      setState.updateKeyboard[boardIndex](boardState[boardIndex], newTileEvals[boardIndex], true);
+    })
+    setTileEvals(newTileEvals);
+    setDidMount(true);
+  }, [])
 
 const routes = numStrings.map((num, i) => 
         <Route path={num} key={num} 
                 element={<GameBoard 
+                          ref={updateRef}
                           answer={answers[i]} 
                           maxAttempts={6} 
                           boardState={boardState[i]} 
@@ -157,6 +193,7 @@ const routes = numStrings.map((num, i) =>
                           setGuessedLetters={setState.setGuessedLetters[i]}
                           animating={animating}
                           setAnimating={setAnimating}
+                          updateKeyboard={setState.updateKeyboard[i]}
                           />}
                   />
   )
@@ -181,12 +218,10 @@ const routes = numStrings.map((num, i) =>
         <Route path='*' element={<Navigate to="/five" />} />
       </Routes>
 
-    
     </div>
   );
 }
 
 // [TODO]: stats
-
 
 export default App;

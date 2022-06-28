@@ -1,8 +1,7 @@
-import React, { useState, useImperativeHandle } from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import GameTile from './GameTile.js'
 import styles from './styles/GameRowStyles.js'
 import { createUseStyles } from 'react-jss';
-import { forwardRef } from 'react';
 
 const useStyles = createUseStyles(styles);
 

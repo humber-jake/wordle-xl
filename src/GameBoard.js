@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createRef, forwardRef, useImperativeHandle } from 'react';
 import GameRow from './GameRow.js'
 import './styles/GameBoardStyles.css'
 import Keyboard from './Keyboard'
@@ -6,7 +6,17 @@ import { useMemo } from 'react';
 
 
 
-function GameBoard(props) {
+function GameBoard(props,ref) {
+
+    const [update, setUpdate] = useState(false)
+
+    const triggerUpdate = () => {
+        setUpdate(true);
+    }
+
+    useImperativeHandle(ref, () => ({
+        triggerUpdate: triggerUpdate
+    }))
 
     const {answer, maxAttempts, validateGuess,
             boardState, setBoardState, 
@@ -15,12 +25,13 @@ function GameBoard(props) {
             gameOver, setGameOver,
             guessing, setGuessing,
             animating, setAnimating,
-            guessedLetters, setGuessedLetters
+            guessedLetters, setGuessedLetters,
+            updateKeyboard
         } = props;
 
     const flipTime = answer.length * 300 + 300;
     const rows = [...Array(maxAttempts)];
-    const wobbles = useMemo(() => rows.map(() => React.createRef()))
+    const wobbles = useMemo(() => rows.map(() => createRef()))
 
     const [isEvaluating, setIsEvaluating] = useState(false);
     
@@ -65,20 +76,6 @@ function GameBoard(props) {
         updateKeyboard([...boardState, guessing], [...tileEvals, result]);
     }
 
-    function updateKeyboard(words, evals){
-        let result = {}
-        
-        words.join('').split('').forEach((l,i) => {
-            if(result[l] === 'correct') return;
-            if(evals.flat()[i] === 'correct') result[l] = evals.flat()[i];
-            if(result[l] === 'present') return;
-            result[l] = evals.flat()[i];
-        });
-        setTimeout(()=>{
-            setGuessedLetters(result);
-        }, (300 + 300 * answer.length));
-    }
-    
     function handleSubmit(e){
         e.preventDefault();
         if(guessing.length < answer.length) return;
@@ -128,6 +125,9 @@ function GameBoard(props) {
             <div className='GameBoard-Container'>
                 <div className='GameBoard'>
                     {board}
+                    {gameOver &&
+                     <div>Game Over!</div>
+                    }
                     <form className='GameBoard-Form'>
                         <input 
                             onKeyDown={handleKeyDown} 
@@ -150,5 +150,7 @@ function GameBoard(props) {
         </div>
     );
 }
+
+GameBoard = forwardRef(GameBoard);
 
 export default GameBoard;
