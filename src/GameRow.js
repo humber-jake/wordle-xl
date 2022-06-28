@@ -22,7 +22,7 @@ function GameRow(props, ref){
     
     const classes = useStyles();
     
-    const { answer, boardState, idx, guessing, currentGuess, tileEvals, gameOver, animating } = props;
+    const { answer, boardState, idx, guessing, currentGuess, tileEvals, animating } = props;
     const tiles = [...Array(answer.length)]
 
     const row = tiles.map((t,i) => {

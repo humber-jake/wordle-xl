@@ -1,8 +1,13 @@
 import React, { useEffect, useState, createRef, forwardRef, useImperativeHandle } from 'react';
 import GameRow from './GameRow.js'
-import './styles/GameBoardStyles.css'
 import Keyboard from './Keyboard'
 import { useMemo } from 'react';
+import styles from './styles/GameBoardStyles.js'
+import { createUseStyles } from 'react-jss';
+// import './styles/GameBoardStyles.css'
+
+
+const useStyles = createUseStyles(styles);
 
 
 
@@ -17,6 +22,8 @@ function GameBoard(props,ref) {
     useImperativeHandle(ref, () => ({
         triggerUpdate: triggerUpdate
     }))
+
+    const classes = useStyles();
 
     const {answer, maxAttempts, validateGuess,
             boardState, setBoardState, 
@@ -87,13 +94,18 @@ function GameBoard(props,ref) {
         setIsEvaluating(true);
         setBoardState([...boardState, guessing]);
         localStorage.setItem(`boardState${answer.length}`, JSON.stringify([...boardState, guessing]))
-        if(guessing === answer) setGameOver('winner')
-        else if(boardState.length === maxAttempts) setGameOver('loser');
+        if(guessing === answer || boardState.length === maxAttempts){
+            setTimeout(() => {
+                setGameOver(true);
+            }, flipTime);
+        }
+
         setGuessing('')
 
         setTimeout(() => {
             setIsEvaluating(false);
         }, flipTime);
+
         setAnimating(true);
         setTimeout(() => {
             setAnimating(false);
@@ -115,21 +127,31 @@ function GameBoard(props,ref) {
                     guessing={guessing} 
                     currentGuess={i === boardState.length}
                     tileEvals={tileEvals[i] || []}
-                    gameOver={gameOver}
                     animating={animating}
                 />
     })
+
+    const messages = [
+        "Genius!",
+        "Magnificent!",
+        "Impressive!",
+        "Splendid!",
+        "Great!",
+        "Phew!"
+    ]
  
     return (
-        <div className='Game' onClick={setInputFocus}>
-            <div className='GameBoard-Container'>
-                <div className='GameBoard'>
+        <div className={classes.Game} onClick={setInputFocus}>
+            <div className={classes.GameBoardContainer}>
+                <div className={classes.GameBoard}>
                     {board}
+
                     {gameOver &&
-                     <div>Game Over!</div>
+                        <div className={classes.messages}>{messages[boardState.length] || messages[5]}</div>
                     }
-                    <form className='GameBoard-Form'>
+                    <form className={classes.GameBoardForm}>
                         <input 
+                            className={classes.GameBoardInput}
                             onKeyDown={handleKeyDown} 
                             ref={inputRef} 
                             type="text" 
@@ -140,11 +162,11 @@ function GameBoard(props,ref) {
                             disabled={gameOver}
                             required
                         />
-                        <button className='GameBoard-Button' type='submit' onClick={handleSubmit} disabled={isEvaluating}>Guess</button>
+                        <button className={classes.GameBoardButton} type='submit' onClick={handleSubmit} disabled={isEvaluating}>Guess</button>
                     </form>
                 </div>
             </div>
-            <div className='keyboard-container'>
+            <div className={classes.keyboard}>
                 <Keyboard handleSubmit={handleSubmit} guessedLetters={guessedLetters} answer={answer}/>
             </div>
         </div>

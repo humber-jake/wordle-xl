@@ -165,6 +165,10 @@ const [didMount, setDidMount] = useState(false);
         // make rest absent
         result = [...result].map(i => i === undefined ? 'absent' : i);
         newTileEvals[boardIndex].push(result);
+
+        if(word === answers[boardIndex]){
+          setState.setGameOver[boardIndex](true)
+        }
       })
       setState.updateKeyboard[boardIndex](boardState[boardIndex], newTileEvals[boardIndex], true);
     })
