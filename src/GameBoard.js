@@ -98,19 +98,24 @@ function GameBoard(props,ref) {
     function handleSubmit(e){
         e.preventDefault();
         if(guessing.length < answer.length) return;
+
         if(validateGuess(guessing)){
             wobbles[boardState.length].current.triggerWobble()
             return;
         } 
 
-        let lastPlayed = new Date().setHours(0,0,0,0);
-        localStorage.setItem(`lastPlayed${answer.length}`, lastPlayed)
-
+        let expiration = new Date()
+        expiration.setDate(expiration.getDate() + 1)
+        expiration.setHours(0,0,0,0);
+        expiration = expiration -0;
+        localStorage.setItem(`expiration`, expiration)
+        
+        
         evaluateGuess(guessing);
         setIsEvaluating(true);
         setBoardState([...boardState, guessing]);
         localStorage.setItem(`boardState${answer.length}`, JSON.stringify([...boardState, guessing]))
-        if(guessing === answer || boardState.length === maxAttempts){
+        if(guessing === answer){
             setTimeout(() => {
                 setGameOver(true);
             }, flipTime);
@@ -130,6 +135,9 @@ function GameBoard(props,ref) {
 
 
     useEffect(()=> {
+        if(boardState.length === maxAttempts){
+            setGameOver(true);
+        }
         updateKeyboard([...boardState], [...tileEvals])
     })
 
@@ -162,8 +170,13 @@ function GameBoard(props,ref) {
                 <div className={classes.GameBoard}>
                     {board}
 
-                    {gameOver &&
-                        <div className={classes.messages}>{messages[boardState.length] || messages[5]}</div>
+                    {gameOver && 
+                        <div className={classes.messages}>{
+                                gameOver && !boardState.includes(answer) ?
+                                answer.toUpperCase()  : 
+                                messages[boardState.length -1] || messages[5]
+                                }
+                        </div>
                     }
                     <form className={classes.GameBoardForm}>
                         <input 

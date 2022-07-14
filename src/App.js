@@ -138,6 +138,12 @@ function App() {
 
     setInputFocus();
 
+    // check expiration of guesses;
+    localStorage.setItem('today', new Date()-0)
+    if(localStorage.getItem('expiration') < localStorage.getItem('today')){
+      localStorage.clear()
+    }
+
       // reset()
 
     let newBoardState = boardState;
