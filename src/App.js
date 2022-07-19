@@ -36,6 +36,11 @@ import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
   })
 
 function App() {
+
+  // [TODO]:
+  // create count variable based on launch day (pick a day, make it).
+  // Use count variable as the state to trigger use effect that resets all the above server level code
+  // update count variable with setCount passed to GameEndDialogue when the timer hits midnight
   
 
   const useFocus = () => {
@@ -57,15 +62,25 @@ function App() {
   const [guessedLetters, setGuessedLetters] = useState(Array.from(numStrings, x => []));
   const [animating, setAnimating] = useState(false);
 
+  const [statistics, setStatistics] = useState(Array.from(numStrings, x => ({
+    averageGuesses: 0,
+    currentStreak: 0,
+    gamesPlayed: 0,
+    gamesWon: 0,
+    guesses: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, fail: 0},
+    maxStreak: 0,
+    winPercentage: 0,
+  })))
+
 
   function reset(){
-      answers = getAnswers();
-      setGuessing('');
-      setBoardState(Array.from(numStrings, x => []))
-      setTileEvals(Array.from(numStrings, x => []));
-      setGameOver(Array.from(numStrings, x => false));
-      setGuessedLetters(Array.from(numStrings, x => {}));
-      setAnimating(false);
+      // answers = getAnswers();
+      // setGuessing('');
+      // setBoardState(Array.from(numStrings, x => []))
+      // setTileEvals(Array.from(numStrings, x => []));
+      // setGameOver(Array.from(numStrings, x => false));
+      // setGuessedLetters(Array.from(numStrings, x => {}));
+      // setAnimating(false);
   }
 
   function handleClick(){
@@ -80,6 +95,7 @@ function App() {
     setGameOver: {},
     setGuessedLetters: {},
     updateKeyboard: {},
+    setStatistics:{}
   };
 
   boardState.forEach((board, i) => {
@@ -106,6 +122,13 @@ function App() {
       let newState = guessedLetters;
       newState[i] = update;
       setGuessedLetters(newState)
+    }
+
+    setState.setStatistics[i] = function(update){
+      let newState = statistics;
+      newState[i] = update;
+      setStatistics(newState)
+      localStorage.setItem('statistics', JSON.stringify(newState))
     }
 
     setState.updateKeyboard[i] = function(words, evals, isFromStorage){
@@ -135,16 +158,16 @@ function App() {
   const updateRef = useRef();
 
   useEffect(() => {
-
     setInputFocus();
 
     // check expiration of guesses;
     localStorage.setItem('today', new Date()-0)
-    if(localStorage.getItem('expiration') < localStorage.getItem('today')){
-      localStorage.clear()
+    if(localStorage.getItem('expiration') && localStorage.getItem('expiration') < localStorage.getItem('today')){
+      numStrings.forEach((num, i) => {
+        if(localStorage.getItem(`boardState${i+5}`)) localStorage.removeItem(`boardState${i+5}`)
+      })
     }
 
-      // reset()
 
     let newBoardState = boardState;
     numStrings.forEach((num, i) => {
@@ -189,6 +212,14 @@ function App() {
       })
       setState.updateKeyboard[boardIndex](boardState[boardIndex], newTileEvals[boardIndex], true);
     })
+
+    // getStatistics
+    if(!localStorage.getItem('statistics')){
+      localStorage.setItem('statistics', JSON.stringify(statistics))
+    } else {
+      setStatistics(JSON.parse(localStorage.getItem('statistics')))
+    }
+
     setTileEvals(newTileEvals);
     setDidMount(true);
   }, [])
@@ -214,6 +245,8 @@ const routes = numStrings.map((num, i) =>
                           setGuessedLetters={setState.setGuessedLetters[i]}
                           animating={animating}
                           setAnimating={setAnimating}
+                          statistics={statistics[i]}
+                          setStatistics={setState.setStatistics[i]}
                           updateKeyboard={setState.updateKeyboard[i]}
                           />}
                   />
@@ -230,7 +263,7 @@ const routes = numStrings.map((num, i) =>
           <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             {header}
           </div>
-          <GameEndDialog reset={reset}/>
+          <GameEndDialog reset={reset} statistics={statistics}/>
         </Toolbar>
       </AppBar>
 

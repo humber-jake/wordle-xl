@@ -4,6 +4,7 @@ import Keyboard from './Keyboard'
 import { useMemo } from 'react';
 import styles from './styles/GameBoardStyles.js'
 import { createUseStyles } from 'react-jss';
+import { getTableSortLabelUtilityClass } from '@mui/material';
 // import './styles/GameBoardStyles.css'
 
 
@@ -12,18 +13,6 @@ const useStyles = createUseStyles(styles);
 
 
 function GameBoard(props,ref) {
-
-    // Erase guesses if more than a day old
-    useEffect(()=> {
-        let today = new Date().setHours(0,0,0,0);
-        if(localStorage.getItem(`lastPlayed${answer.length}`) && today != localStorage.getItem(`lastPlayed${answer.length}`)){
-            setBoardState([])
-            setTileEvals([])
-            setGameOver(false)
-            setGuessedLetters({})
-            localStorage.setItem(`boardState${answer.length}`, [])
-        }
-    }, [])
 
     const [update, setUpdate] = useState(false)
 
@@ -44,6 +33,7 @@ function GameBoard(props,ref) {
             gameOver, setGameOver,
             guessing, setGuessing,
             animating, setAnimating,
+            statistics, setStatistics,
             guessedLetters, setGuessedLetters,
             updateKeyboard
         } = props;
@@ -63,6 +53,30 @@ function GameBoard(props,ref) {
         // disable all keys but enter and letters
         let keys = [8,13,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90]
         if(!keys.includes(e.keyCode)) e.preventDefault();
+    }
+
+    function updateStats(stats){
+        let update = stats;
+        update.gamesPlayed++
+        if(boardState.includes(answer)){
+            update.gamesWon++
+            update.guesses[boardState.length]++
+        }
+        if(!boardState.includes(answer)){
+            update.guesses.fail++
+            update.currentStreak = 0;
+            }
+        update.winPercentage = Math.round((update.gamesWon / update.gamesPlayed) * 100)
+        update.averageGuesses = Math.round(Object.values(update.guesses).reduce((curr, prev) => prev + curr) / update.gamesPlayed)
+
+        let today = new Date().setHours(0,0,0,0)-0;
+        if(boardState.includes(answer) && (today - JSON.parse(localStorage.getItem(`lastPlayed${answer.length}`)) < 86400000 || update.currentStreak === 0)){
+            update.currentStreak++
+        }
+        if(update.currentStreak > update.maxStreak){
+            update.maxStreak = update.currentStreak
+        }
+        return update;
     }
 
     function evaluateGuess(guessing){
@@ -140,6 +154,15 @@ function GameBoard(props,ref) {
         }
         updateKeyboard([...boardState], [...tileEvals])
     })
+
+    useEffect(() => {
+        if(gameOver === true){
+                let updatedStats = updateStats(statistics);
+                let lastPlayed = new Date().setHours(0,0,0,0) -0;
+                localStorage.setItem(`lastPlayed${answer.length}`, lastPlayed)
+                setStatistics(updatedStats)
+        }
+    },[gameOver])
 
     const board = rows.map((r,i) => {
         return <GameRow 

@@ -78,8 +78,8 @@ function Keyboard(props) {
 
     const keys = rows.map(row => 
         <div key={row} className={classes.KeyboardRow}>
-          {Array.from(row).map(key => (
-            <span key={key} className={`${classes.KeyboardKey} ${guessedLetters[key]}`}>{key}</span>
+          {Array.from(row).map(k => (
+            <span key={k} className={`${classes.KeyboardKey} ${guessedLetters[k]}`}>{k}</span>
 
             // [TODO]: onCLick the span - push {key} to input value / guessing
 

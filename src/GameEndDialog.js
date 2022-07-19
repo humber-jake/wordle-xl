@@ -2,13 +2,16 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
 import CloseIcon from '@mui/icons-material/Close';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import Typography from '@mui/material/Typography';
+import Statistics from './Statistics.js'
+import styles from './styles/GameEndDialogStyles.js'
+import { createUseStyles } from 'react-jss';
 
+let useStyles = createUseStyles(styles)
 
 function getCountdown(){
+  
   
   let today = new Date()
   let tomorrow = new Date()
@@ -25,17 +28,18 @@ function getCountdown(){
 
 
 export default function GameEndDialog(props) {
-
+  
+  let classes = useStyles()
   const [timer, setTimer] = React.useState(getCountdown());
   const [open, setOpen] = React.useState(false);
-  const {reset} = props;
+  const {reset, statistics} = props;
 
   React.useEffect(() => {
 
     if(timer.hours === '00' && timer.minutes === '00' && timer.seconds === '00' ){
       // using setTimeout to account for the second between a zeroed out clock and a new day
       setTimeout(() => {
-        reset();
+        // reset();
       }, 1000)
     }
 
@@ -59,6 +63,8 @@ export default function GameEndDialog(props) {
         <BarChartIcon fontSize="large"/>
       </Button>
       <Dialog
+        fullWidth
+        maxWidth='md'
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
@@ -67,12 +73,20 @@ export default function GameEndDialog(props) {
           <Button autoFocus onClick={handleClose}>
             <CloseIcon/>
           </Button>
-            <div>Statistics</div>
-            <div>Distribution</div>
+
+            <h1 className={classes.statsTitle}>Statistics</h1>
+          <div className={classes.charts}>
+            <Statistics statistics={statistics[0]}/>
+            <Statistics statistics={statistics[1]}/>
+            <Statistics statistics={statistics[2]}/>
+            <Statistics statistics={statistics[3]}/>
+          </div>
+
             <div>Share</div>
-          <div>
-              <h3>Next Puzzle:</h3>
-              <div style={{textAlign: 'center'}}>{timer.hours}: {timer.minutes}: {timer.seconds}</div>
+
+            <div className={classes.timerContainer}>
+              <div className={classes.timerTitle}>Next Puzzle</div>
+              <div className={classes.timer}>{timer.hours}:{timer.minutes}:{timer.seconds}</div>
             </div>
         </DialogContent>
       </Dialog>
