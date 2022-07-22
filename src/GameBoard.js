@@ -1,11 +1,10 @@
-import React, { useEffect, useState, createRef, forwardRef, useImperativeHandle } from 'react';
+import React, { useEffect, useState, createRef, forwardRef, useImperativeHandle, useRef } from 'react';
 import GameRow from './GameRow.js'
 import Keyboard from './Keyboard'
 import { useMemo } from 'react';
 import styles from './styles/GameBoardStyles.js'
 import { createUseStyles } from 'react-jss';
 import { getTableSortLabelUtilityClass } from '@mui/material';
-// import './styles/GameBoardStyles.css'
 
 
 const useStyles = createUseStyles(styles);
@@ -14,41 +13,46 @@ const useStyles = createUseStyles(styles);
 
 function GameBoard(props,ref) {
 
-    const [update, setUpdate] = useState(false)
-
-    const triggerUpdate = () => {
-        setUpdate(true);
-    }
-
-    useImperativeHandle(ref, () => ({
-        triggerUpdate: triggerUpdate
-    }))
-
     const classes = useStyles();
-
+    
     const {answer, maxAttempts, validateGuess,
-            boardState, setBoardState, 
-            tileEvals, setTileEvals, 
-            inputRef, setInputFocus,
-            gameOver, setGameOver,
-            guessing, setGuessing,
-            animating, setAnimating,
-            statistics, setStatistics,
-            guessedLetters, setGuessedLetters,
-            updateKeyboard
-        } = props;
-
+        boardState, setBoardState, 
+        tileEvals, setTileEvals, 
+        inputRef, setInputFocus,
+        gameOver, setGameOver,
+        animating, setAnimating,
+        statistics, setStatistics,
+        guessedLetters, setGuessedLetters,
+        updateKeyboard
+    } = props;
+    
     const flipTime = answer.length * 300 + 300;
     const rows = [...Array(maxAttempts)];
     const wobbles = useMemo(() => rows.map(() => createRef()))
-
     const [isEvaluating, setIsEvaluating] = useState(false);
+    const [guessing, setGuessing] = useState('');
     
+    useEffect(()=>{
+        setGuessing('')
+    },[answer])
+
+
+    const resetGuessing = () => {
+        setGuessing('');
+        setGuessedLetters({});
+    };
+
+    useImperativeHandle(ref, () => {
+        return {
+        resetGuessing: resetGuessing
+        }
+    });
+
     // Allow only letters
     function handleChange(e){
         setGuessing(e.target.value.replace(/[^a-zA-Z]/ig,''));
     }
-
+    
     function handleKeyDown(e){
         // disable all keys but enter and letters
         let keys = [8,13,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90]

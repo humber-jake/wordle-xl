@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-// import "./styles/Keyboard.css"
+import React, { useState, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { createUseStyles } from 'react-jss';
 import Backspace from './styles/backspace.js'
 
-function Keyboard(props) {
+function Keyboard(props, ref) {
 
     const { handleSubmit, guessedLetters, answer } = props;
     const rows = ['qwertyuiop','asdfghjkl','zxcvbnm']
@@ -36,18 +35,12 @@ function Keyboard(props) {
           borderRadius: "5px",
           justifyContent: "center",
           "&.correct": {
-            // transition: `background-color ${answer.length * 300}ms`,
-            // transitionTimingFunction: "step-end",
             backgroundColor: "#6aaa64"
           },
           "&.present": {
-            // transition: `background-color ${answer.length * 300}ms`,
-            // transitionTimingFunction: "step-end",
             backgroundColor: "#c9b458"
           },
           "&.absent": {
-            // transition: `background-color ${answer.length * 300}ms`,
-            // transitionTimingFunction: "step-end",
             backgroundColor: "#787c7e"
           },
         },

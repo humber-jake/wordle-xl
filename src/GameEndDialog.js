@@ -39,7 +39,7 @@ export default function GameEndDialog(props) {
     if(timer.hours === '00' && timer.minutes === '00' && timer.seconds === '00' ){
       // using setTimeout to account for the second between a zeroed out clock and a new day
       setTimeout(() => {
-        // reset();
+        reset();
       }, 1000)
     }
 
@@ -50,12 +50,14 @@ export default function GameEndDialog(props) {
   }, [timer.seconds]);
 
 
-  const handleClickOpen = () => {
+  const handleClickOpen = () => { 
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+
+  let charts = statistics.map((chart, i) => <Statistics key={i} statistics={chart}/>)
 
   return (
     <div>
@@ -76,10 +78,7 @@ export default function GameEndDialog(props) {
 
             <h1 className={classes.statsTitle}>Statistics</h1>
           <div className={classes.charts}>
-            <Statistics statistics={statistics[0]}/>
-            <Statistics statistics={statistics[1]}/>
-            <Statistics statistics={statistics[2]}/>
-            <Statistics statistics={statistics[3]}/>
+            {charts}
           </div>
 
             <div>Share</div>

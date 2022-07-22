@@ -14,34 +14,32 @@ import shuffleSeed from 'shuffle-seed';
 import { AppBar, Toolbar, Typography, Button} from '@mui/material';
 import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
 
-  const getAnswers = () => {
+
+function App() {
+
+  console.clear()
+  
+  function getAnswers(){
       function getNewWord(PossibleAnswers){
         let shuffledAnswers = shuffleSeed.shuffle(PossibleAnswers, 'seed')
-        let day = Math.floor(new Date() / (1000 * 60 * 60 * 24)) % shuffledAnswers.length;
+        let date = new Date().setHours(0,0,0,0)
+        let day = Math.floor(date / (1000 * 60 * 60 * 24)) % shuffledAnswers.length;
           console.log(`#${day}: ${shuffledAnswers[day]}` )
           return shuffledAnswers[day];
       }
       return [FiveLetterAnswers, SixLetterAnswers, SevenLetterAnswers, EightLetterAnswers].map(arr => getNewWord(arr));
   }
-
-  let answers = getAnswers();
+  
+  // let answers = getAnswers();
   const guesses = [FiveLetterGuesses, SixLetterGuesses, SevenLetterGuesses, EightLetterGuesses]
-  const validations = {}
   const numStrings = ['Five','Six','Seven','Eight']
   
-  answers.forEach((ans, i) => {
+  const validations = {}
+  numStrings.forEach((num, i) => {
     validations[i] = function(guess){
       return !guesses[i].includes(guess);
     }
   })
-
-function App() {
-
-  // [TODO]:
-  // create count variable based on launch day (pick a day, make it).
-  // Use count variable as the state to trigger use effect that resets all the above server level code
-  // update count variable with setCount passed to GameEndDialogue when the timer hits midnight
-  
 
   const useFocus = () => {
     const htmlElRef = useRef(null)
@@ -49,10 +47,11 @@ function App() {
     return [ htmlElRef, setFocus ] 
   }
 
+  const guessingRef = useRef(null)
 
   const [inputRef, setInputFocus] = useFocus();
-  const [didMount, setDidMount] = useState(false);
-  const [guessing, setGuessing] = useState('');
+  // const [didMount, setDidMount] = useState(false);
+  // const [guessing, setGuessing] = useState('');
 
 
   // initialize master state objects containing state for each board
@@ -61,7 +60,8 @@ function App() {
   const [gameOver, setGameOver] = useState(Array.from(numStrings, x => false));
   const [guessedLetters, setGuessedLetters] = useState(Array.from(numStrings, x => []));
   const [animating, setAnimating] = useState(false);
-
+  const [answers, setAnswers] = useState(getAnswers());
+  const [day, setDay] = useState(0);
   const [statistics, setStatistics] = useState(Array.from(numStrings, x => ({
     averageGuesses: 0,
     currentStreak: 0,
@@ -74,18 +74,34 @@ function App() {
 
 
   function reset(){
-      // answers = getAnswers();
-      // setGuessing('');
-      // setBoardState(Array.from(numStrings, x => []))
-      // setTileEvals(Array.from(numStrings, x => []));
-      // setGameOver(Array.from(numStrings, x => false));
-      // setGuessedLetters(Array.from(numStrings, x => {}));
-      // setAnimating(false);
+    
+    setDay(day + 1);
+    console.log(`============`)
+    console.log(`DAY: ${day}`)
+    console.log(getAnswers())
+    console.log(`============`)
+    setAnswers(getAnswers())
+    guessingRef.current.resetGuessing()
+
+      numStrings.forEach((num, i) => {
+
+        if(localStorage.getItem(`boardState${i+5}`)){
+          localStorage.removeItem(`boardState${i+5}`)
+          setState.setBoardState[i]([])
+          setState.setTileEvals[i]([])
+          // setState.updateKeyboard[i](boardState[i], tileEvals[i], true)
+        }
+
+        validations[i] = function(guess){
+          return !guesses[i].includes(guess); 
+        }
+      })
+
   }
 
   function handleClick(){
     setInputFocus();
-    setGuessing('')
+    // setGuessing('')
   }
   
   // Create setstate functions for each board
@@ -163,6 +179,7 @@ function App() {
     // check expiration of guesses;
     localStorage.setItem('today', new Date()-0)
     if(localStorage.getItem('expiration') && localStorage.getItem('expiration') < localStorage.getItem('today')){
+
       numStrings.forEach((num, i) => {
         if(localStorage.getItem(`boardState${i+5}`)) localStorage.removeItem(`boardState${i+5}`)
       })
@@ -221,13 +238,13 @@ function App() {
     }
 
     setTileEvals(newTileEvals);
-    setDidMount(true);
+    // setDidMount(true);
   }, [])
 
 const routes = numStrings.map((num, i) => 
         <Route path={num} key={num} 
                 element={<GameBoard 
-                          ref={updateRef}
+                          ref={guessingRef}
                           answer={answers[i]} 
                           maxAttempts={6} 
                           boardState={boardState[i]} 
@@ -238,9 +255,9 @@ const routes = numStrings.map((num, i) =>
                           inputRef={inputRef}
                           setInputFocus={setInputFocus}
                           gameOver={gameOver[i]}
-                          setGameOver={setState.setGameOver[i]}
-                          guessing={guessing}
-                          setGuessing={setGuessing}
+                          setGameOver={setState.setGameOver[i]} 
+                          // guessing={guessing}
+                          // setGuessing={setGuessing}
                           guessedLetters={guessedLetters[i]}
                           setGuessedLetters={setState.setGuessedLetters[i]}
                           animating={animating}
