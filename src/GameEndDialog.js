@@ -98,7 +98,7 @@ function GameEndDialog(props, ref) {
           </div>
 
             <div className={classes.timerContainer}>
-              <div className={classes.timerTitle}>Next Puzzle</div>
+              <div className={classes.timerTitle}>New Puzzles:</div>
               <div className={classes.timer}>{timer.hours}:{timer.minutes}:{timer.seconds}</div>
             </div>
         </DialogContent>

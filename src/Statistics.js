@@ -32,7 +32,7 @@ function Statistics(props) {
         let day = `${new Date().getMonth()+1}/${new Date().getDate()}`
         let letters = tileEvals[0].length;
 
-        navigator.clipboard.writeText(`WORDLE ${letters}XL ${day}: \n ${result}`).then(function() {
+        navigator.clipboard.writeText(`WORDLE ${letters}XL ${day}: \n${result}`).then(function() {
             setMessage('Copied!')
           }, function() {
             setMessage('Something went wrong!')

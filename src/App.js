@@ -17,14 +17,14 @@ import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
 
 function App() {
 
-  console.clear()
+  // console.clear()
   
   function getAnswers(){
       function getNewWord(PossibleAnswers){
         let shuffledAnswers = shuffleSeed.shuffle(PossibleAnswers, 'seed')
         let date = new Date().setHours(0,0,0,0)
         let day = Math.floor(date / (1000 * 60 * 60 * 24)) % shuffledAnswers.length;
-          console.log(`#${day}: ${shuffledAnswers[day]}` )
+          // console.log(`#${day}: ${shuffledAnswers[day]}` )
           return shuffledAnswers[day];
       }
       return [FiveLetterAnswers, SixLetterAnswers, SevenLetterAnswers, EightLetterAnswers].map(arr => getNewWord(arr));
@@ -78,10 +78,6 @@ function App() {
   function reset(){
     
     setDay(day + 1);
-    console.log(`============`)
-    console.log(`DAY: ${day}`)
-    console.log(getAnswers())
-    console.log(`============`)
     setAnswers(getAnswers())
     guessingRef.current.resetGuessing()
 
