@@ -169,6 +169,9 @@ function GameBoard(props,ref) {
                 let lastPlayed = new Date().setHours(0,0,0,0) -0;
                 localStorage.setItem(`lastPlayed${answer.length}`, lastPlayed)
                 setStatistics(updatedStats)
+                setTimeout(() => {
+                    displayStats()
+                }, flipTime + 1000);
         }
     },[gameOver])
 
