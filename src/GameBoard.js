@@ -171,7 +171,7 @@ function GameBoard(props,ref) {
                 setStatistics(updatedStats)
                 setTimeout(() => {
                     displayStats()
-                }, flipTime + 1000);
+                }, 1000);
         }
     },[gameOver])
 
