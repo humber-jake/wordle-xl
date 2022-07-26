@@ -7,6 +7,11 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import Statistics from './Statistics.js'
 import styles from './styles/GameEndDialogStyles.js'
 import { createUseStyles } from 'react-jss';
+import { Slide } from '@mui/material';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide timeout={{ enter: 1000, exit: 1000 }} direction="up" ref={ref} {...props} />; 
+});
 
 let useStyles = createUseStyles(styles)
 
@@ -27,12 +32,12 @@ function getCountdown(){
 }
 
 
-export default function GameEndDialog(props) {
+function GameEndDialog(props, ref) {
   
   let classes = useStyles()
   const [timer, setTimer] = React.useState(getCountdown());
   const [open, setOpen] = React.useState(false);
-  const {reset, statistics} = props;
+  const {reset, statistics, tileEvals, gameOver} = props;
 
   React.useEffect(() => {
 
@@ -50,6 +55,16 @@ export default function GameEndDialog(props) {
   }, [timer.seconds]);
 
 
+  const displayStats = () => {
+    setOpen(true)
+  };
+
+  React.useImperativeHandle(ref, () => {
+      return {
+      displayStats: displayStats
+      }
+  });
+
   const handleClickOpen = () => { 
     setOpen(true);
   };
@@ -57,7 +72,7 @@ export default function GameEndDialog(props) {
     setOpen(false);
   };
 
-  let charts = statistics.map((chart, i) => <Statistics key={i} statistics={chart}/>)
+  let charts = statistics.map((chart, i) => <Statistics key={i} index={i} statistics={chart} tileEvals={tileEvals[i]} gameOver={gameOver[i]} />)
 
   return (
     <div>
@@ -70,6 +85,7 @@ export default function GameEndDialog(props) {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        TransitionComponent={Transition}
       >
         <DialogContent>
           <Button autoFocus onClick={handleClose}>
@@ -81,8 +97,6 @@ export default function GameEndDialog(props) {
             {charts}
           </div>
 
-            <div>Share</div>
-
             <div className={classes.timerContainer}>
               <div className={classes.timerTitle}>Next Puzzle</div>
               <div className={classes.timer}>{timer.hours}:{timer.minutes}:{timer.seconds}</div>
@@ -92,3 +106,7 @@ export default function GameEndDialog(props) {
     </div>
   );
 }
+
+GameEndDialog = React.forwardRef(GameEndDialog);
+
+export default GameEndDialog;

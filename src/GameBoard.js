@@ -4,7 +4,6 @@ import Keyboard from './Keyboard'
 import { useMemo } from 'react';
 import styles from './styles/GameBoardStyles.js'
 import { createUseStyles } from 'react-jss';
-import { getTableSortLabelUtilityClass } from '@mui/material';
 
 
 const useStyles = createUseStyles(styles);
@@ -23,7 +22,7 @@ function GameBoard(props,ref) {
         animating, setAnimating,
         statistics, setStatistics,
         guessedLetters, setGuessedLetters,
-        updateKeyboard
+        updateKeyboard, displayStats
     } = props;
     
     const flipTime = answer.length * 300 + 300;
@@ -32,11 +31,12 @@ function GameBoard(props,ref) {
     const [isEvaluating, setIsEvaluating] = useState(false);
     const [guessing, setGuessing] = useState('');
     
+    // Clears the input field when new words are chosen, ie at Midnight
     useEffect(()=>{
         setGuessing('')
     },[answer])
 
-
+    // forwardRef function to trigger GameBoard update when midnight reset happens at App level
     const resetGuessing = () => {
         setGuessing('');
         setGuessedLetters({});
@@ -48,13 +48,13 @@ function GameBoard(props,ref) {
         }
     });
 
-    // Allow only letters
+    // Allow only letters in input field
     function handleChange(e){
         setGuessing(e.target.value.replace(/[^a-zA-Z]/ig,''));
     }
     
+    // disable all keys but enter, letters, modifiers and backspace
     function handleKeyDown(e){
-        // disable all keys but enter and letters
         let keys = [8,13,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90]
         if(!keys.includes(e.keyCode)) e.preventDefault();
     }
@@ -137,6 +137,10 @@ function GameBoard(props,ref) {
             setTimeout(() => {
                 setGameOver(true);
             }, flipTime);
+            setTimeout(() => {
+                displayStats()
+            }, flipTime + 1000);
+
         }
 
         setGuessing('')

@@ -48,10 +48,8 @@ function App() {
   }
 
   const guessingRef = useRef(null)
-
+  const statsRef = useRef(null)
   const [inputRef, setInputFocus] = useFocus();
-  // const [didMount, setDidMount] = useState(false);
-  // const [guessing, setGuessing] = useState('');
 
 
   // initialize master state objects containing state for each board
@@ -72,6 +70,10 @@ function App() {
     winPercentage: 0,
   })))
 
+
+  function displayStats(){
+    statsRef.current.displayStats()
+  }
 
   function reset(){
     
@@ -169,9 +171,6 @@ function App() {
   // =================================
   // Getting boardstate from Local Storage
   // =================================
-  
-
-  const updateRef = useRef();
 
   useEffect(() => {
     setInputFocus();
@@ -265,6 +264,7 @@ const routes = numStrings.map((num, i) =>
                           statistics={statistics[i]}
                           setStatistics={setState.setStatistics[i]}
                           updateKeyboard={setState.updateKeyboard[i]}
+                          displayStats={displayStats}
                           />}
                   />
   )
@@ -280,7 +280,7 @@ const routes = numStrings.map((num, i) =>
           <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             {header}
           </div>
-          <GameEndDialog reset={reset} statistics={statistics}/>
+          <GameEndDialog ref={statsRef} reset={reset} statistics={statistics} tileEvals={tileEvals} gameOver={gameOver}/>
         </Toolbar>
       </AppBar>
 

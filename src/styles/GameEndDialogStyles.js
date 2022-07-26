@@ -22,7 +22,7 @@ export default {
       "display": "grid",
       "margin": "0 auto",
       "width": "60%",
-      "gridTemplateColumns": "1fr 1fr 1fr 1fr"
+      "gridTemplateColumns": "1fr 1fr 1fr 1fr 1fr"
     },
     metric: {
       "fontFamily": "'Clear Sans', 'Helvetica Neue', Arial, sans-serif",
@@ -76,7 +76,9 @@ export default {
       "marginRight": "3px",
       "padding": "0px 6px 0px 3px",
       "minWidth": "15px",
-      "height": "80%"
+      "height": "80%",
+      "zIndex": "2",
+      "opacity": "90%"
     },
     timerContainer: {
       "display": "block",
@@ -92,5 +94,50 @@ export default {
       "fontWeight": "200",
       "fontVariantNumeric": "tabular-nums",
       "letterSpacing": "-2px"
+    },
+    unfinished: {
+      "opacity":'50%',
+    },
+    messages: {
+      "animation": "$fade 2000ms ease-in-out",
+      "position": "absolute",
+      "top": "40%",
+      "left": "50%",
+      "transform": "translate(-50%, -50%)",
+      "fontSize": "2rem",
+      "color": "white",
+      "backgroundColor": "#272727d6",
+      "textAlign": "center",
+      "margin": "0 auto",
+      "padding": "0.5rem",
+      "borderRadius": "10px",
+      "textShadow": "2px 2px 2px #171616",
+      "zIndex": "10",
+      "opacity": "0%" 
+    },
+    "@keyframes fade": {
+      "0%": {
+        "transform": "translate(-50%, -30%)",
+        "opacity": '0%'
+      },
+      "30%": {
+        "transform": "translate(-50%, -50%)",
+        "opacity": '100%'
+      },
+      "90%": {
+        "transform": "translate(-50%, -50%)",
+        "opacity": '100%'
+      },
+      "100%": {
+        "transform": "translate(-50%, -50%)",
+        "opacity": '0%'
+      },
+    },
+    fadeNumber:{
+      "fontFamily": "Rubik",
+      "color": "#787c7e",
+      "position": "absolute",
+      "fontSize": "12rem",
+      "transform": "translate(125%, -10%)",
     }
   }
