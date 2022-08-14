@@ -15,3 +15,12 @@ div a.active{
 .disabled{
     pointer-events: none;
 }
+
+.header{
+    display: flex;
+}
+@media screen and (max-width: 750px) {
+    .header{
+        display:none
+    }
+}

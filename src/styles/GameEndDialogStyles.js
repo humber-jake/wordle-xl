@@ -1,4 +1,4 @@
-export default {
+const styles = {
     charts: {
       "display": "grid",
       "gap": "1rem",
@@ -10,6 +10,9 @@ export default {
         "gap": "1rem",
         "gridTemplateColumns": "1fr"
       }
+    },
+    topBar: {
+      "display": "flex",
     },
     board: {
       "width": "100%",
@@ -23,6 +26,18 @@ export default {
       "margin": "0 auto",
       "width": "60%",
       "gridTemplateColumns": "1fr 1fr 1fr 1fr 1fr"
+    },
+    statsButton: {
+      marginLeft: '-67px'
+    },
+    '@media (min-width: 750px)': {
+      statsButton: {
+        "width": '100%',
+        "justifySelf": 'flex-end',
+      },
+      burger: {
+        "display": "block",
+      },
     },
     metric: {
       "fontFamily": "'Clear Sans', 'Helvetica Neue', Arial, sans-serif",
@@ -141,3 +156,5 @@ export default {
       "transform": "translate(125%, -10%)",
     }
   }
+
+  export default styles;

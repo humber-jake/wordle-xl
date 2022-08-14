@@ -8,6 +8,7 @@ import Statistics from './Statistics.js'
 import styles from './styles/GameEndDialogStyles.js'
 import { createUseStyles } from 'react-jss';
 import { Slide } from '@mui/material';
+import Burger from './Burger.js';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide timeout={{ enter: 1000, exit: 1000 }} direction="up" ref={ref} {...props} />; 
@@ -16,7 +17,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 let useStyles = createUseStyles(styles)
 
 function getCountdown(){
-  
   
   let today = new Date()
   let tomorrow = new Date()
@@ -75,8 +75,11 @@ function GameEndDialog(props, ref) {
   let charts = statistics.map((chart, i) => <Statistics key={i} index={i} statistics={chart} tileEvals={tileEvals[i]} gameOver={gameOver[i]} />)
 
   return (
-    <div>
-      <Button variant="string" size="small" onClick={handleClickOpen} style={{marginLeft: '-67px'}}>
+    <div className={classes.topBar}>
+
+      <Burger /> 
+
+      <Button className={classes.statsButton} variant="string" size="small" onClick={handleClickOpen}>
         <BarChartIcon fontSize="large"/>
       </Button>
       <Dialog

@@ -13,7 +13,9 @@ import EightLetterGuesses from './wordlists/8-letter-guesses'
 import shuffleSeed from 'shuffle-seed';
 import { AppBar, Toolbar, Typography, Button} from '@mui/material';
 import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
+import { ThemeProvider, createUseStyles } from 'react-jss';
 
+const useStyles = createUseStyles();
 
 function App() {
 
@@ -270,22 +272,22 @@ const routes = numStrings.map((num, i) =>
   header.splice(header.length / 2, 0, <Typography key='title' variant="h4" component="div" sx={{fontFamily: "'Patua One', cursive;", margin: "0 2rem"}}>Wordle XL</Typography>)
   
   return (
-    <div className="App">
-      <AppBar position="static" color="transparent" sx={{ boxShadow: "none", borderBottom: "1px solid lightgray" }}>
-        <Toolbar sx={{ minHeight: "50px !important"}} >
-          <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            {header}
-          </div>
-          <GameEndDialog ref={statsRef} reset={reset} statistics={statistics} tileEvals={tileEvals} gameOver={gameOver}/>
-        </Toolbar>
-      </AppBar>
+      <div className="App">
+        <AppBar position="static" color="transparent" sx={{ boxShadow: "none", borderBottom: "1px solid lightgray" }}>
+          <Toolbar sx={{ minHeight: "50px !important", justifyContent: 'space-between'}}>
+            <div className='header' style={{ width: '100%', alignItems: 'center', justifyContent: 'center'}}>
+              {header}
+            </div>
+            <GameEndDialog ref={statsRef} reset={reset} statistics={statistics} tileEvals={tileEvals} gameOver={gameOver}/>
+          </Toolbar>
+        </AppBar>
 
-      <Routes>
-        {routes}
-        <Route path='*' element={<Navigate to="/five" />} />
-      </Routes>
+        <Routes>
+          {routes}
+          <Route path='*' element={<Navigate to="/five" />} />
+        </Routes>
 
-    </div>
+      </div>
   );
 }
 
