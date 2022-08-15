@@ -15,6 +15,9 @@ const styles = {
       "width": "100%",
       "margin": "0 auto"
     },
+    gridOverlap: {
+      "gridArea": "1 / 1 / 1 / 1",
+    },
     statsTitle: {
       "textAlign": "center"
     },
@@ -23,6 +26,11 @@ const styles = {
       "margin": "0 auto",
       "width": "60%",
       "gridTemplateColumns": "1fr 1fr 1fr 1fr 1fr"
+    },
+    "@media screen and (max-width: 960px)": {
+      stats: {
+        "width": "90%",
+      },
     },
     statsButton: {
       marginLeft: '-67px'
@@ -46,11 +54,14 @@ const styles = {
       "fontSize": "2rem"
     },
     chart: {
+      "display": "grid",
+      "gridTemplateRows": "1fr",
+      "gridTemplateColumns": "1fr",
       "margin": "0.5rem auto",
       "backgroundColor": "#f7f7f7",
       "padding": "1rem 0.5rem",
       "marginBottom": "1.5rem",
-      "borderRadius": "15px"
+      "borderRadius": "15px",
     },
     row: {
       "display": "grid",
@@ -81,7 +92,6 @@ const styles = {
       "minWidth": "15px",
       "height": "80%",
       "zIndex": "2",
-      "opacity": "90%"
     },
     timerContainer: {
       "display": "block",
@@ -137,11 +147,11 @@ const styles = {
       },
     },
     fadeNumber:{
+      "margin": "0 auto",
       "fontFamily": "Rubik",
       "color": "#787c7e",
-      "position": "absolute",
       "fontSize": "12rem",
-      "transform": "translate(125%, -10%)",
+      "gridArea": "1 / 1 / 1 / 1",
     }
   }
 

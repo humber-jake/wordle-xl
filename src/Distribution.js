@@ -22,9 +22,11 @@ function Distribution(props) {
 
     return (
         <div className={classes.chart}>
-            <div className={classes.fadeNumber}>{boardNumber}</div>
-            {chart}
-        </div>
+                <div className={classes.fadeNumber}>{boardNumber}</div>
+                <div className={classes.gridOverlap}>
+                    {chart}
+                </div>
+            </div>
     );
 }
 
