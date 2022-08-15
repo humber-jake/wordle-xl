@@ -86,6 +86,18 @@ function GameTile(props) {
                 animationIterationCount: 'infinite',
             }
         },
+        "@media screen and (max-width: 560px)": {
+          GameTile:{
+            height: '50px',
+            width: '50px',
+          },
+        },
+        "@media screen and (max-width: 500px)": {
+          GameTile:{
+            height: '35px',
+            width: '35px',
+          },
+        },
     }
     const useStyles = createUseStyles(styles);
     const classes = useStyles();

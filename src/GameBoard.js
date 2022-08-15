@@ -113,6 +113,14 @@ function GameBoard(props,ref) {
         updateKeyboard([...boardState, guessing], [...tileEvals, result]);
     }
 
+    function handleBackspace(){
+        let res = guessing;
+        res = res.split('');
+        res.splice(-1, 1)
+        res = res.join('');
+        setGuessing(res)
+    }
+
     function handleSubmit(e){
         e.preventDefault();
         if(guessing.length < answer.length) return;
@@ -230,7 +238,7 @@ function GameBoard(props,ref) {
                 </div>
             </div>
             <div className={classes.keyboard}>
-                <Keyboard handleSubmit={handleSubmit} guessedLetters={guessedLetters} answer={answer}/>
+                <Keyboard handleSubmit={handleSubmit} handleBackspace={handleBackspace} guessedLetters={guessedLetters} answer={answer}/>
             </div>
         </div>
     );

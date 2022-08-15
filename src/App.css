@@ -7,6 +7,12 @@ div a{
     margin: 0 1rem;
 }
 
+@media screen and (max-width: 900px){
+    .headerLink{
+        display: none
+    }
+}
+
 div a.active{
     background-color: #d3d6da;
     border-radius: 5px;
@@ -18,9 +24,5 @@ div a.active{
 
 .header{
     display: flex;
-}
-@media screen and (max-width: 750px) {
-    .header{
-        display:none
-    }
+    justify-content: space-around;
 }

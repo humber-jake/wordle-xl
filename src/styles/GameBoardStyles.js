@@ -15,6 +15,14 @@ const styles = {
       GameBoard: {
         "height": "420px"
       },
+      "@media screen and (max-width: 420px)": {
+        GameBoard: {
+          "height": 'auto',
+        },
+        GameBoardContainer: {
+          "height": "auto",
+        },
+      },
       GameBoardForm: {
         "width": "50%",
         "margin": "0 auto",

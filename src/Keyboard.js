@@ -4,9 +4,8 @@ import Backspace from './styles/backspace.js'
 
 function Keyboard(props, ref) {
 
-    const { handleSubmit, guessedLetters, answer } = props;
-    const rows = ['qwertyuiop','asdfghjkl','zxcvbnm']
-
+    const { handleSubmit, handleBackspace, guessedLetters, answer } = props;
+    
     const styles = {
         Keyboard: {
           width: "420px",
@@ -44,13 +43,6 @@ function Keyboard(props, ref) {
             backgroundColor: "#787c7e"
           },
         },
-        KeyboardButtons: {
-          display: "flex",
-          width: "99%",
-          justifyContent: "space-between",
-          alignItems: "center",
-          margin: "-58px 2px 2px 2px",
-        },
         Button: {
             border: "none",
             fontWeight: "400",
@@ -63,33 +55,41 @@ function Keyboard(props, ref) {
             alignItems: "center",
             borderRadius: "5px",
             justifyContent: "center"
-          }     
+          },
+          "@media screen and (max-width: 420px)": {
+            Keyboard:{
+                width: '350px'
+              },
+              KeyboardKey:{
+                width: '26px',
+                height: '40px',
+              },
+              Button:{
+                height: '44px',
+              },
+          },
     }
-
+    
     const useStyles = createUseStyles(styles);
     const classes = useStyles();
-
+    
+    const rows = ['qwertyuiop','asdfghjkl','zxcvbnm']
+    
     const keys = rows.map(row => 
         <div key={row} className={classes.KeyboardRow}>
           {Array.from(row).map(k => (
             <span key={k} className={`${classes.KeyboardKey} ${guessedLetters[k]}`}>{k}</span>
-
-            // [TODO]: onCLick the span - push {key} to input value / guessing
-
         ))}</div>
     )
+
+    Object.entries(keys)[2][1].props.children.splice(rows[2].length, 0, <button key='backspace' className={classes.Button} onClick={handleBackspace}>{Backspace}</button>)
+    Object.entries(keys)[2][1].props.children.splice(0,0, <button key='enter' className={classes.Button} onClick={handleSubmit}>Enter</button>)
 
 
     return (
         <div className={classes.Keyboard}>
             {keys}
-            <div className={classes.KeyboardButtons}>
-                <button className={classes.Button} onClick={handleSubmit}>Enter</button>
-                <button className={classes.Button}>{Backspace}</button>
-            </div>
         </div>
-
-        
     );
 }
 

@@ -9,10 +9,7 @@ const styles = {
         "display": "grid",
         "gap": "1rem",
         "gridTemplateColumns": "1fr"
-      }
-    },
-    topBar: {
-      "display": "flex",
+      },
     },
     board: {
       "width": "100%",
@@ -29,15 +26,6 @@ const styles = {
     },
     statsButton: {
       marginLeft: '-67px'
-    },
-    '@media (min-width: 750px)': {
-      statsButton: {
-        "width": '100%',
-        "justifySelf": 'flex-end',
-      },
-      burger: {
-        "display": "block",
-      },
     },
     metric: {
       "fontFamily": "'Clear Sans', 'Helvetica Neue', Arial, sans-serif",

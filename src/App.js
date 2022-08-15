@@ -13,9 +13,8 @@ import EightLetterGuesses from './wordlists/8-letter-guesses'
 import shuffleSeed from 'shuffle-seed';
 import { AppBar, Toolbar, Typography, Button} from '@mui/material';
 import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
-import { ThemeProvider, createUseStyles } from 'react-jss';
-
-const useStyles = createUseStyles();
+import Burger from './Burger.js'
+import {useMediaQuery} from '@mui/material';
 
 function App() {
 
@@ -52,6 +51,15 @@ function App() {
   const guessingRef = useRef(null)
   const statsRef = useRef(null)
   const [inputRef, setInputFocus] = useFocus();
+
+
+  const breakpoints = {
+    xs: useMediaQuery('(min-width: 0px)'),
+    sm: useMediaQuery('(min-width: 600px)'),
+    md: useMediaQuery('(min-width: 900px)'),
+    lg: useMediaQuery('(min-width: 1200px)'),
+    xl: useMediaQuery('(min-width: 1536px)'),
+  }
 
 
   // initialize master state objects containing state for each board
@@ -268,14 +276,31 @@ const routes = numStrings.map((num, i) =>
   )
 
   // map links for each game, splice title into the middle for layout purposes
-  const header = numStrings.map((num, i) => <NavLink to={`/${num}`} key={num} className={ animating ? 'disabled' : ''}><Button onClick={handleClick} variant='string'>{num}</Button></NavLink>)
-  header.splice(header.length / 2, 0, <Typography key='title' variant="h4" component="div" sx={{fontFamily: "'Patua One', cursive;", margin: "0 2rem"}}>Wordle XL</Typography>)
+  let header = numStrings.map((num, i) => (
+      <NavLink to={`/${num}`} key={num} className={`${animating ? 'disabled' : ''} headerLink`}>
+        <Button onClick={handleClick} variant='string'>
+          {num}
+        </Button>
+      </NavLink>)
+      )
+  
+  header.splice(header.length / 2, 0, <Typography key='title' variant="h4" component="div" sx={{fontFamily: "'Patua One', cursive;"}}>Wordle XL</Typography>)
+  
+  let burger = <div style={{width: "75px"}}></div>;
+  
+  if(!breakpoints.md){
+    burger = <Burger key={'burger'} numStrings={numStrings}/>
+  }
   
   return (
       <div className="App">
         <AppBar position="static" color="transparent" sx={{ boxShadow: "none", borderBottom: "1px solid lightgray" }}>
           <Toolbar sx={{ minHeight: "50px !important", justifyContent: 'space-between'}}>
-            <div className='header' style={{ width: '100%', alignItems: 'center', justifyContent: 'center'}}>
+            {burger}
+            <div className='header' style={{ 
+              margin: "0 auto", 
+              alignItems: 'center', 
+              }}>
               {header}
             </div>
             <GameEndDialog ref={statsRef} reset={reset} statistics={statistics} tileEvals={tileEvals} gameOver={gameOver}/>
@@ -286,7 +311,6 @@ const routes = numStrings.map((num, i) =>
           {routes}
           <Route path='*' element={<Navigate to="/five" />} />
         </Routes>
-
       </div>
   );
 }

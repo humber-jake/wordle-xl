@@ -8,7 +8,6 @@ import Statistics from './Statistics.js'
 import styles from './styles/GameEndDialogStyles.js'
 import { createUseStyles } from 'react-jss';
 import { Slide } from '@mui/material';
-import Burger from './Burger.js';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide timeout={{ enter: 1000, exit: 1000 }} direction="up" ref={ref} {...props} />; 
@@ -75,9 +74,7 @@ function GameEndDialog(props, ref) {
   let charts = statistics.map((chart, i) => <Statistics key={i} index={i} statistics={chart} tileEvals={tileEvals[i]} gameOver={gameOver[i]} />)
 
   return (
-    <div className={classes.topBar}>
-
-      <Burger /> 
+    <div>
 
       <Button className={classes.statsButton} variant="string" size="small" onClick={handleClickOpen}>
         <BarChartIcon fontSize="large"/>
