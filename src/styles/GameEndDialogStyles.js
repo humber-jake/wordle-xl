@@ -18,8 +18,13 @@ const styles = {
     gridOverlap: {
       "gridArea": "1 / 1 / 1 / 1",
     },
+    dialogHeader: {
+      "display": "grid",
+      "gridTemplateColumns": "1fr 1fr 1fr"
+    },
     statsTitle: {
-      "textAlign": "center"
+      "textAlign": "center",
+      "justifySelf": "center",
     },
     stats: {
       "display": "grid",
@@ -27,7 +32,7 @@ const styles = {
       "width": "60%",
       "gridTemplateColumns": "1fr 1fr 1fr 1fr 1fr"
     },
-    "@media screen and (max-width: 960px)": {
+    "@media screen and (min-width: 960px)": {
       stats: {
         "width": "90%",
       },

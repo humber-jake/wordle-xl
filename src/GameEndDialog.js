@@ -88,11 +88,14 @@ function GameEndDialog(props, ref) {
         TransitionComponent={Transition}
       >
         <DialogContent>
-          <Button autoFocus onClick={handleClose}>
-            <CloseIcon/>
-          </Button>
 
+          <div className={classes.dialogHeader}>
+            <Button sx={{justifySelf: 'flex-start'}} autoFocus onClick={handleClose}>
+              <CloseIcon/>
+            </Button>
             <h1 className={classes.statsTitle}>Statistics</h1>
+          </div>
+
           <div className={classes.charts}>
             {charts}
           </div>
