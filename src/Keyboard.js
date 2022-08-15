@@ -47,6 +47,7 @@ function Keyboard(props, ref) {
             border: "none",
             fontWeight: "400",
             textTransform: "uppercase",
+            textDecoration: "none",
             width: "4rem",
             height: "52px",
             margin: "2px",

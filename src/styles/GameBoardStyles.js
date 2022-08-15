@@ -33,7 +33,6 @@ const styles = {
       },
       GameBoardButton: {
         "display": "none",
-        "marginLeft": "36%"
       },
       keyboard: {
         "height": "30%"
