@@ -121,6 +121,12 @@ function GameBoard(props,ref) {
         setGuessing(res)
     }
 
+    function handleLetter(letter){
+        if(guessing.length < answer.length){
+            setGuessing(`${guessing}${letter}`)
+        }
+    }
+
     function handleSubmit(e){
         e.preventDefault();
         if(guessing.length < answer.length) return;
@@ -232,13 +238,14 @@ function GameBoard(props,ref) {
                             onChange={handleChange} 
                             disabled={gameOver}
                             required
+                            inputMode='none'
                         />
                         <button className={classes.GameBoardButton} type='submit' onClick={handleSubmit} disabled={isEvaluating}>Guess</button>
                     </form>
                 </div>
             </div>
             <div className={classes.keyboard}>
-                <Keyboard handleSubmit={handleSubmit} handleBackspace={handleBackspace} guessedLetters={guessedLetters} answer={answer}/>
+                <Keyboard handleSubmit={handleSubmit} handleBackspace={handleBackspace} handleLetter={handleLetter} guessedLetters={guessedLetters} answer={answer}/>
             </div>
         </div>
     );

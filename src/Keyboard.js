@@ -4,7 +4,7 @@ import Backspace from './styles/backspace.js'
 
 function Keyboard(props, ref) {
 
-    const { handleSubmit, handleBackspace, guessedLetters, answer } = props;
+    const { handleSubmit, handleBackspace, handleLetter, guessedLetters, answer } = props;
     
     const styles = {
         Keyboard: {
@@ -78,7 +78,7 @@ function Keyboard(props, ref) {
     const keys = rows.map(row => 
         <div key={row} className={classes.KeyboardRow}>
           {Array.from(row).map(k => (
-            <span key={k} className={`${classes.KeyboardKey} ${guessedLetters[k]}`}>{k}</span>
+            <span key={k} onClick={() => handleLetter(k)} className={`${classes.KeyboardKey} ${guessedLetters[k]}`}>{k}</span>
         ))}</div>
     )
 
