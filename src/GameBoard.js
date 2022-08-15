@@ -122,6 +122,7 @@ function GameBoard(props,ref) {
     }
 
     function handleLetter(letter){
+        if(animating || gameOver) return;
         if(guessing.length < answer.length){
             setGuessing(`${guessing}${letter}`)
         }
